@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 
 import './scss/base.scss';
 
+import Header from './components/Header';
+
 export class WebApp extends React.Component{
   render() {
-    return <div>Web App</div>
+    return <div><Header />Web App</div>
   }
 }
 

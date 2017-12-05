@@ -26,6 +26,7 @@
     "no-unused-vars": 1,
     "no-trailing-spaces": [1, { "skipBlankLines": true }],
     "no-unreachable": 1,
+    "react/jsx-uses-vars": [2],
     "no-alert": 0
   }
 }
