@@ -1,8 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import MainMenu from './header/MainMenu';
 
-export default class Header extends React.Component{
+const mapStateToProps = (state) => ({
+  popUpOpened: state.reducer.popUpOpened
+})
+
+class Header extends React.Component{
   render() {
     return (
       <div>
@@ -14,3 +19,7 @@ export default class Header extends React.Component{
     )
   }
 }
+
+Header = connect(mapStateToProps)(Header);
+
+export default Header;

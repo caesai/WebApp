@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 14:
+/***/ 29:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17,13 +17,19 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDom = __webpack_require__(18);
+var _reactDom = __webpack_require__(32);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-__webpack_require__(27);
+var _reactRedux = __webpack_require__(17);
 
-var _Header = __webpack_require__(29);
+var _store = __webpack_require__(69);
+
+var _store2 = _interopRequireDefault(_store);
+
+__webpack_require__(72);
+
+var _Header = __webpack_require__(74);
 
 var _Header2 = _interopRequireDefault(_Header);
 
@@ -35,6 +41,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var store = (0, _store2.default)({});
+
 var WebApp = exports.WebApp = function (_React$Component) {
   _inherits(WebApp, _React$Component);
 
@@ -45,13 +53,17 @@ var WebApp = exports.WebApp = function (_React$Component) {
   }
 
   _createClass(WebApp, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      console.log('Wtf');
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(_Header2.default, null),
-        'Web App'
+        _reactRedux.Provider,
+        { store: store },
+        _react2.default.createElement(_Header2.default, null)
       );
     }
   }]);
@@ -69,14 +81,83 @@ _reactDom2.default.render(_react2.default.createElement(WebApp, { ref: function 
 
 /***/ }),
 
-/***/ 27:
+/***/ 69:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = configureStore;
+
+var _redux = __webpack_require__(21);
+
+var _reduxThunk = __webpack_require__(70);
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+var _reducers = __webpack_require__(71);
+
+var _reducers2 = _interopRequireDefault(_reducers);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var rootReducer = (0, _redux.combineReducers)({ reducer: _reducers2.default });
+
+function configureStore(initialState) {
+  var middleware = (0, _redux.applyMiddleware)(_reduxThunk2.default);
+  var createStoreWithMiddleware = (0, _redux.compose)(middleware, typeof window !== 'undefined' && window.devToolsExtension ? window.devToolsExtension() : function (f) {
+    return f;
+  })(_redux.createStore);
+
+  var store = createStoreWithMiddleware(rootReducer, initialState);
+
+  return store;
+}
+
+/***/ }),
+
+/***/ 71:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = reducer;
+var reducerState = {
+  loggedIn: false,
+  popUpOpened: false
+};
+
+function reducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : reducerState;
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'OPEN_POPUP':
+      return Object.assign({}, state, {
+        popUpOpened: action.popUpState
+      });
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+
+/***/ 72:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 29:
+/***/ 74:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -92,7 +173,9 @@ var _react = __webpack_require__(2);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _MainMenu = __webpack_require__(30);
+var _reactRedux = __webpack_require__(17);
+
+var _MainMenu = __webpack_require__(75);
 
 var _MainMenu2 = _interopRequireDefault(_MainMenu);
 
@@ -103,6 +186,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    popUpOpened: state.reducer.popUpOpened
+  };
+};
 
 var Header = function (_React$Component) {
   _inherits(Header, _React$Component);
@@ -136,11 +225,13 @@ var Header = function (_React$Component) {
   return Header;
 }(_react2.default.Component);
 
+Header = (0, _reactRedux.connect)(mapStateToProps)(Header);
+
 exports.default = Header;
 
 /***/ }),
 
-/***/ 30:
+/***/ 75:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -207,4 +298,4 @@ exports.default = MainMenu;
 
 /***/ })
 
-},[14]);
+},[29]);

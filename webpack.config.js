@@ -9,8 +9,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: './',
-    filename: 'js/[name]-[chunkhash].bundle.js',
-    chunkFilename: 'js/[name]-[chunkhash].js'
+    filename: 'js/[name]-[hash].bundle.js',
+    chunkFilename: 'js/[name]-[hash].js'
   },
   module: {
     loaders: [
@@ -27,7 +27,7 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin('css/styles.css'),
     new HtmlWebpackPlugin({
-      alwaysWriteToDisk: true,
+      alwaysWriteToDisk: false,
       title: 'WebApp',
       template: 'template.html',
       files: {
