@@ -7,14 +7,23 @@ const mapStateToProps = (state) => ({
   popUpOpened: state.reducer.popUpOpened
 })
 
-class Header extends React.Component{
+const actions = {
+  openPopUp: () => ({
+    type: 'OPEN_POPUP'
+  })
+}
+
+let Header = class extends React.Component{
   render() {
     return (
       <div>
         <ul>
           <MainMenu />
         </ul>
-        <a href='#'>Sign In/Up</a>
+        <a href='#' onClick={(e)=>{
+          e.preventDefault();
+          this.props.dispatch(actions.openPopUp());
+        }}>Sign In/Up</a>
       </div>
     )
   }

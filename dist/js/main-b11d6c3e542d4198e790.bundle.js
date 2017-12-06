@@ -53,11 +53,6 @@ var WebApp = exports.WebApp = function (_React$Component) {
   }
 
   _createClass(WebApp, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      console.log('Wtf');
-    }
-  }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
@@ -141,7 +136,11 @@ function reducer() {
   switch (action.type) {
     case 'OPEN_POPUP':
       return Object.assign({}, state, {
-        popUpOpened: action.popUpState
+        popUpOpened: true
+      });
+    case 'CLOSE_POPUP':
+      return Object.assign({}, state, {
+        popUpOpened: false
       });
     default:
       return state;
@@ -193,6 +192,14 @@ var mapStateToProps = function mapStateToProps(state) {
   };
 };
 
+var actions = {
+  openPopUp: function openPopUp() {
+    return {
+      type: 'OPEN_POPUP'
+    };
+  }
+};
+
 var Header = function (_React$Component) {
   _inherits(Header, _React$Component);
 
@@ -205,6 +212,8 @@ var Header = function (_React$Component) {
   _createClass(Header, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         'div',
         null,
@@ -215,7 +224,10 @@ var Header = function (_React$Component) {
         ),
         _react2.default.createElement(
           'a',
-          { href: '#' },
+          { href: '#', onClick: function onClick(e) {
+              e.preventDefault();
+              _this2.props.dispatch(actions.openPopUp());
+            } },
           'Sign In/Up'
         )
       );

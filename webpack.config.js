@@ -1,4 +1,4 @@
-const webpack = require("webpack");
+const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -8,7 +8,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: './',
+    publicPath: '/dist/',
     filename: 'js/[name]-[hash].bundle.js',
     chunkFilename: 'js/[name]-[hash].js'
   },
@@ -27,16 +27,18 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin('css/styles.css'),
     new HtmlWebpackPlugin({
-      alwaysWriteToDisk: false,
+      alwaysWriteToDisk: true,
       title: 'WebApp',
       template: 'template.html',
       files: {
         css: [ 'css/styles.css' ],
         js: [ 'js/main.bundle.js']
-      }
+      },
+      inject: 'body'
     }),
     new HtmlWebpackHarddiskPlugin({
-      outputPath: path.resolve(__dirname, 'dist')
+      outputPath: path.resolve(__dirname, 'dist'),
+      inject: 'body'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
@@ -49,7 +51,7 @@ module.exports = {
   ],
   devServer: {
     publicPath: '/dist/',
-    contentBase: './dist',
+    contentBase: './dist/',
     hot: true
   }
 };

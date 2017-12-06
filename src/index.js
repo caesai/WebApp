@@ -1,22 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { connect, Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import configureStore from './store/store';
 
 import './scss/base.scss';
 
 import Header from './components/Header';
+import Footer from './components/Footer';
+import PopUp from './components/PopUp';
 
 let store = configureStore({});
 
 export class WebApp extends React.Component{
-  componentDidMount() {
-    console.log('Wtf');
-  }
   render() {
     return (
       <Provider store={store}>
-        <Header />
+        <div>
+          <Header />
+          <Footer />
+          <PopUp />
+        </div>
       </Provider>
     )
   }
