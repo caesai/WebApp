@@ -16,5 +16,5 @@ npm run install
 ```
 2. compile web app
 ```
-npm run install
+npm run release
 ```

@@ -12,4 +12,4 @@ addons:
 script:
   - nvm install 8
   - npm install
-  - webpack --config webpack.prod.config.js
+  - npm run release
