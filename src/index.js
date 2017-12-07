@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { connect, Provider } from 'react-redux';
+import { BrowserRouter, withRouter} from 'react-router-dom';
 import configureStore from './store/store';
 
 import './scss/base.scss';
@@ -9,17 +10,38 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import PopUp from './components/PopUp';
 
+import Routes from './routes';
+
 let store = configureStore({});
 
-export class WebApp extends React.Component{
+const mapStateToProps = (state) => ({
+  popUpOpened: state.reducer.popUpOpened
+})
+
+let Root = class extends React.Component{
   render() {
     return (
-      <Provider store={store}>
         <div>
           <Header />
+            <div>
+                <Routes />
+            </div>
           <Footer />
-          <PopUp />
+          {this.props.popUpOpened ? <PopUp /> : null}
         </div>
+    )
+  }
+}
+
+Root = withRouter(connect(mapStateToProps)(Root));
+
+export default class WebApp extends React.Component{
+  render() {
+    return(
+      <Provider store={store}>
+        <BrowserRouter>
+          <Root />
+        </BrowserRouter>
       </Provider>
     )
   }

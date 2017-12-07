@@ -50,8 +50,8 @@ module.exports = {
     })
   ],
   devServer: {
-    publicPath: '/dist/',
-    contentBase: './dist/',
-    hot: true
+    historyApiFallback: true,
+    publicPath: 'http://localhost:8080/dist/',
+    contentBase: './dist/'
   }
 };

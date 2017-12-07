@@ -16,14 +16,18 @@ const actions = {
 let Header = class extends React.Component{
   render() {
     return (
-      <div>
-        <ul>
-          <MainMenu />
-        </ul>
-        <a href='#' onClick={(e)=>{
-          e.preventDefault();
-          this.props.dispatch(actions.openPopUp());
-        }}>Sign In/Up</a>
+      <div className='header'>
+        <div className='container'>
+          <ul>
+            <MainMenu />
+          </ul>
+          <div className='logInBtn'>
+            <a href='#' onClick={(e)=>{
+              e.preventDefault();
+              this.props.dispatch(actions.openPopUp());
+            }}>Sign In/Up</a>
+          </div>
+        </div>
       </div>
     )
   }
