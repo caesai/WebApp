@@ -10,4 +10,5 @@ addons:
     - g++
     - nodejs
 script:
+  - npm install
   - webpack --config webpack.prod.config.js
