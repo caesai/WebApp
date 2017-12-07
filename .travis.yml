@@ -1,0 +1,13 @@
+language: nodejs
+node_js:
+  - "8"
+dist: xenial
+sudo: required
+addons:
+  apt:
+    packages:
+    - gcc
+    - g++
+    - nodejs
+script:
+  - webpack --config webpack.prod.config.js
