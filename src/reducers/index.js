@@ -4,7 +4,8 @@ const reducerState = {
   popUpBody: {
     title: '',
     body: ''
-  }
+  },
+  err: ''
 }
 
 export default function reducer (state = reducerState, action) {
@@ -16,7 +17,13 @@ export default function reducer (state = reducerState, action) {
       });
       case 'CLOSE_POPUP':
       return Object.assign({}, state, {
-        popUpOpened: false
+        popUpOpened: false,
+        popUpBody: {},
+        err: ''
+      });
+      case 'CATCH_POPUP_ERROR':
+      return Object.assign({}, state, {
+          err: action.err
       });
       default:
       return state;

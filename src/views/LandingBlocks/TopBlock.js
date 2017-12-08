@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {actions, signInPopUp} from 'utils/';
+import {actions, signInPopUp, newsLetterPopUp} from 'utils/';
 
 const mapStateToProps = (state) => ({
   popUpOpened: state.reducer.popUpOpened
@@ -17,6 +17,11 @@ const TopBlock = (props) => {
       <button onClick={()=>{
         props.dispatch(actions.openPopUp(signInPopUp));
       }}>Sign in</button>
+      <p>Fill admin admin in sign in pop up window and you will get to the profile page</p>
+      <p>Also user can subscribe to newsletter</p>
+      <button onClick={()=>{
+        props.dispatch(actions.openPopUp(newsLetterPopUp));
+      }}>Subscribe</button>
     </div>
   )
 }
