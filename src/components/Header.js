@@ -1,17 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import {actions, signInPopUp} from 'utils/';
+
 import MainMenu from './header/MainMenu';
 
 const mapStateToProps = (state) => ({
   popUpOpened: state.reducer.popUpOpened
 })
 
-const actions = {
-  openPopUp: () => ({
-    type: 'OPEN_POPUP'
-  })
-}
 
 let Header = class extends React.Component{
   render() {
@@ -24,7 +21,7 @@ let Header = class extends React.Component{
           <div className='logInBtn'>
             <a href='#' onClick={(e)=>{
               e.preventDefault();
-              this.props.dispatch(actions.openPopUp());
+              this.props.dispatch(actions.openPopUp(signInPopUp));
             }}>Sign In/Up</a>
           </div>
         </div>

@@ -12,6 +12,9 @@ module.exports = {
     filename: 'js/[name]-[hash].bundle.js',
     chunkFilename: 'js/[name]-[hash].js'
   },
+  resolve: {
+    modules: [__dirname, 'node_modules', 'src']
+  },
   module: {
     loaders: [
       { test: /\.js$/, loader: 'babel-loader' },
@@ -21,6 +24,21 @@ module.exports = {
           fallback: 'style-loader',
           use: ['css-loader?minimize=true', 'sass-loader']
         })
+      },
+      {
+          test: /\.(png|jpeg|jpg|gif)$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: '/img/[name].[ext]'
+              }
+            }
+          ]
+      },
+      {
+        test: /\.(otf|eot|svg|ttf|woff|woff2)$/,
+        use: ['url-loader?limit=100&name=fonts/[name].[ext]']
       }
     ]
   },

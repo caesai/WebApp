@@ -1,37 +1,36 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 
-const mapStateToProps = (state) => ({
-  popUpOpened: state.reducer.popUpOpened
-});
+import {actions} from 'utils/';
 
-const actions = {
-  closePopUp: () => ({
-    type: 'CLOSE_POPUP'
-  })
-}
+const mapStateToProps = (state) => ({
+  popUpOpened: state.reducer.popUpOpened,
+  popUpBody: {
+    title: state.reducer.popUpBody.title,
+    btns: state.reducer.popUpBody.btns,
+    body: state.reducer.popUpBody.body
+  }
+});
 
 let PopUp = class extends React.Component{
   render() {
     return(
       <div className='popUp'>
-        <div className='popUpCls' onClick={(e)=>{
+        <div className='popUpCls' onClick={()=>{
           this.props.dispatch(actions.closePopUp());
         }}>
           x
         </div>
         <div className='popUpHead'>
-          <h3>PopUp HeadLine</h3>
+          <h3>{this.props.popUpBody.title && this.props.popUpBody.title}</h3>
+          {this.props.popUpBody.btns ? <this.props.popUpBody.btns /> : null}
         </div>
         <div className='popUpBody'>
-          Please <Link to='/profile'>sign in</Link>
+          <this.props.popUpBody.body />
         </div>
       </div>
     )
   }
 }
 
-PopUp = connect(mapStateToProps)(PopUp);
-
-export default PopUp;
+export default connect(mapStateToProps)(PopUp);

@@ -1,10 +1,12 @@
 import React from 'react';
 
+import TopBlock from './LandingBlocks/TopBlock';
+
 export default class MainPage extends React.Component{
   render() {
     return(
       <div className='container'>
-        <h1>Web App</h1>
+        <TopBlock />
       </div>
     )
   }

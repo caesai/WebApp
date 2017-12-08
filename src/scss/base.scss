@@ -1,5 +1,12 @@
+@import './fonts.scss';
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  font-family: ProximaRegular;
 }
 
 .container {
