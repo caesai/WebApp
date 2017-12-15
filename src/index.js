@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter, withRouter} from 'react-router-dom';
+import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux';
+import createHistory from 'history/createBrowserHistory';
 import configureStore from './store/store';
-
 import './scss/base.scss';
 
 import Header from './components/Header';
@@ -13,12 +14,16 @@ import PopUp from './components/PopUp';
 import Routes from './routes';
 
 let store = configureStore({});
+const history = createHistory();
 
 const mapStateToProps = (state) => ({
   popUpOpened: state.reducer.popUpOpened
 })
 
 let Root = class extends React.Component{
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
         <div>
@@ -39,9 +44,9 @@ export default class WebApp extends React.Component{
   render() {
     return(
       <Provider store={store}>
-        <BrowserRouter>
+        <ConnectedRouter history={history}>
           <Root />
-        </BrowserRouter>
+        </ConnectedRouter>
       </Provider>
     )
   }

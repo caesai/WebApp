@@ -1,6 +1,6 @@
 webpackJsonp([1],{
 
-/***/ 119:
+/***/ 122:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12,7 +12,12 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = reducer;
 var reducerState = {
   loggedIn: false,
-  popUpOpened: false
+  popUpOpened: false,
+  popUpBody: {
+    title: '',
+    body: ''
+  },
+  err: ''
 };
 
 function reducer() {
@@ -22,11 +27,18 @@ function reducer() {
   switch (action.type) {
     case 'OPEN_POPUP':
       return Object.assign({}, state, {
-        popUpOpened: true
+        popUpOpened: true,
+        popUpBody: action.payload
       });
     case 'CLOSE_POPUP':
       return Object.assign({}, state, {
-        popUpOpened: false
+        popUpOpened: false,
+        popUpBody: {},
+        err: ''
+      });
+    case 'CATCH_POPUP_ERROR':
+      return Object.assign({}, state, {
+        err: action.err
       });
     default:
       return state;
@@ -35,14 +47,14 @@ function reducer() {
 
 /***/ }),
 
-/***/ 120:
+/***/ 123:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 122:
+/***/ 125:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -58,9 +70,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(15);
+var _reactRedux = __webpack_require__(8);
 
-var _MainMenu = __webpack_require__(123);
+var _utils = __webpack_require__(27);
+
+var _MainMenu = __webpack_require__(126);
 
 var _MainMenu2 = _interopRequireDefault(_MainMenu);
 
@@ -76,14 +90,6 @@ var mapStateToProps = function mapStateToProps(state) {
   return {
     popUpOpened: state.reducer.popUpOpened
   };
-};
-
-var actions = {
-  openPopUp: function openPopUp() {
-    return {
-      type: 'OPEN_POPUP'
-    };
-  }
 };
 
 var Header = function (_React$Component) {
@@ -118,7 +124,7 @@ var Header = function (_React$Component) {
               'a',
               { href: '#', onClick: function onClick(e) {
                   e.preventDefault();
-                  _this2.props.dispatch(actions.openPopUp());
+                  _this2.props.dispatch(_utils.actions.openPopUp(_utils.signInPopUp));
                 } },
               'Sign In/Up'
             )
@@ -137,7 +143,7 @@ exports.default = Header;
 
 /***/ }),
 
-/***/ 123:
+/***/ 126:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -204,7 +210,7 @@ exports.default = MainMenu;
 
 /***/ }),
 
-/***/ 124:
+/***/ 127:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -259,7 +265,7 @@ exports.default = Footer;
 
 /***/ }),
 
-/***/ 125:
+/***/ 128:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -275,9 +281,9 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(18);
+var _reactRedux = __webpack_require__(8);
 
-var _reactRedux = __webpack_require__(15);
+var _utils = __webpack_require__(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -289,16 +295,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    popUpOpened: state.reducer.popUpOpened
+    popUpOpened: state.reducer.popUpOpened,
+    popUpBody: {
+      title: state.reducer.popUpBody.title,
+      btns: state.reducer.popUpBody.btns,
+      body: state.reducer.popUpBody.body
+    }
   };
-};
-
-var actions = {
-  closePopUp: function closePopUp() {
-    return {
-      type: 'CLOSE_POPUP'
-    };
-  }
 };
 
 var PopUp = function (_React$Component) {
@@ -320,8 +323,8 @@ var PopUp = function (_React$Component) {
         { className: 'popUp' },
         _react2.default.createElement(
           'div',
-          { className: 'popUpCls', onClick: function onClick(e) {
-              _this2.props.dispatch(actions.closePopUp());
+          { className: 'popUpCls', onClick: function onClick() {
+              _this2.props.dispatch(_utils.actions.closePopUp());
             } },
           'x'
         ),
@@ -331,18 +334,14 @@ var PopUp = function (_React$Component) {
           _react2.default.createElement(
             'h3',
             null,
-            'PopUp HeadLine'
-          )
+            this.props.popUpBody.title && this.props.popUpBody.title
+          ),
+          this.props.popUpBody.btns ? _react2.default.createElement(this.props.popUpBody.btns, null) : null
         ),
         _react2.default.createElement(
           'div',
           { className: 'popUpBody' },
-          'Please ',
-          _react2.default.createElement(
-            _reactRouterDom.Link,
-            { to: '/profile' },
-            'sign in'
-          )
+          _react2.default.createElement(this.props.popUpBody.body, null)
         )
       );
     }
@@ -351,13 +350,11 @@ var PopUp = function (_React$Component) {
   return PopUp;
 }(_react2.default.Component);
 
-PopUp = (0, _reactRedux.connect)(mapStateToProps)(PopUp);
-
-exports.default = PopUp;
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(PopUp);
 
 /***/ }),
 
-/***/ 126:
+/***/ 129:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -371,17 +368,17 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(18);
+var _reactRouterDom = __webpack_require__(20);
 
-var _MainPage = __webpack_require__(127);
+var _MainPage = __webpack_require__(130);
 
 var _MainPage2 = _interopRequireDefault(_MainPage);
 
-var _Profile = __webpack_require__(128);
+var _Profile = __webpack_require__(132);
 
 var _Profile2 = _interopRequireDefault(_Profile);
 
-var _store = __webpack_require__(49);
+var _store = __webpack_require__(61);
 
 var _store2 = _interopRequireDefault(_store);
 
@@ -400,7 +397,7 @@ exports.default = Routes;
 
 /***/ }),
 
-/***/ 127:
+/***/ 130:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -415,6 +412,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
+
+var _TopBlock = __webpack_require__(131);
+
+var _TopBlock2 = _interopRequireDefault(_TopBlock);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -439,11 +440,7 @@ var MainPage = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'container' },
-        _react2.default.createElement(
-          'h1',
-          null,
-          'Web App'
-        )
+        _react2.default.createElement(_TopBlock2.default, null)
       );
     }
   }]);
@@ -455,7 +452,105 @@ exports.default = MainPage;
 
 /***/ }),
 
-/***/ 128:
+/***/ 131:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(8);
+
+var _reactRouterDom = __webpack_require__(20);
+
+var _reactRouterRedux = __webpack_require__(26);
+
+var _utils = __webpack_require__(27);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    popUpOpened: state.reducer.popUpOpened,
+    location: state.routing
+  };
+};
+
+var TopBlock = function TopBlock(props) {
+
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'h1',
+      null,
+      'WebApp'
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      _react2.default.createElement(
+        'b',
+        null,
+        'WebApp'
+      ),
+      ' is a React based JavaScript application with main landing page consisting info about some product and user profile page'
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Application provides authorization through OAuth2 or back-end authorization on server side'
+    ),
+    _react2.default.createElement(
+      'button',
+      { onClick: function onClick() {
+          props.dispatch(_utils.actions.openPopUp(_utils.signInPopUp));
+        } },
+      'Sign in'
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      _react2.default.createElement(
+        'button',
+        { onClick: function onClick(e) {
+            console.log(props);
+          } },
+        'Profile'
+      )
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Fill admin admin in sign in pop up window and you will get to the profile page'
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Also user can subscribe to newsletter'
+    ),
+    _react2.default.createElement(
+      'button',
+      { onClick: function onClick() {
+          props.dispatch(_utils.actions.openPopUp(_utils.newsLetterPopUp));
+        } },
+      'Subscribe'
+    )
+  );
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(TopBlock);
+
+/***/ }),
+
+/***/ 132:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -510,7 +605,231 @@ exports.default = Profile;
 
 /***/ }),
 
-/***/ 49:
+/***/ 27:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.newsLetterPopUp = exports.signUpPopUp = exports.signInPopUp = exports.actions = undefined;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(8);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var actions = exports.actions = {
+  openPopUp: function openPopUp(payload) {
+    return {
+      type: 'OPEN_POPUP',
+      payload: payload
+    };
+  },
+  closePopUp: function closePopUp() {
+    return {
+      type: 'CLOSE_POPUP'
+    };
+  },
+  throwPopUpError: function throwPopUpError(errmsg) {
+    return {
+      type: 'CATCH_POPUP_ERROR',
+      err: errmsg
+    };
+  }
+};
+
+var newsLetter = function newsLetter(props) {
+  return _react2.default.createElement(
+    'form',
+    { onSubmit: function onSubmit(e) {
+        e.preventDefault();
+        var inputs = e.target.querySelectorAll('input');
+        try {
+          inputs.forEach(function (val) {
+            if (val.value === '') {
+              throw e;
+            }
+          });
+        } catch (e) {
+          props.dispatch(actions.throwPopUpError('Invalid email address'));
+        }
+      } },
+    _react2.default.createElement(
+      'p',
+      null,
+      'Enter your email to subscribe'
+    ),
+    _react2.default.createElement('input', { type: 'text' }),
+    _react2.default.createElement(
+      'p',
+      { className: 'errormsg' },
+      props.err ? props.err : null
+    ),
+    _react2.default.createElement(
+      'button',
+      { type: 'submit' },
+      'Submit'
+    )
+  );
+};
+
+var signInForm = function signInForm(props) {
+  return _react2.default.createElement(
+    'form',
+    { onSubmit: function onSubmit(e) {
+        e.preventDefault();
+        var inputs = e.target.querySelectorAll('input');
+        try {
+          inputs.forEach(function (val) {
+            if (val.value !== 'admin') {
+              throw e;
+            }
+          });
+        } catch (e) {
+          props.dispatch(actions.throwPopUpError('Invalid login or password'));
+        }
+      } },
+    _react2.default.createElement(
+      'p',
+      null,
+      'Enter your login or email'
+    ),
+    _react2.default.createElement('input', { type: 'text' }),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Enter password'
+    ),
+    _react2.default.createElement('input', { type: 'password' }),
+    _react2.default.createElement(
+      'button',
+      { type: 'submit' },
+      'Submit'
+    ),
+    _react2.default.createElement(
+      'p',
+      { className: 'errormsg' },
+      props.err ? props.err : null
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Or use your FaceBook account to authorize'
+    )
+  );
+};
+
+var signUpForm = function signUpForm() {
+  return _react2.default.createElement(
+    'form',
+    { onSubmit: function onSubmit(e) {
+        e.preventDefault();
+      } },
+    _react2.default.createElement(
+      'p',
+      null,
+      'Enter your login'
+    ),
+    _react2.default.createElement('input', { type: 'text' }),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Enter your email'
+    ),
+    _react2.default.createElement('input', { type: 'text' }),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Enter password'
+    ),
+    _react2.default.createElement('input', { type: 'password' }),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Confirm your password'
+    ),
+    _react2.default.createElement('input', { type: 'password' }),
+    _react2.default.createElement(
+      'button',
+      { type: 'submit' },
+      'Submit'
+    ),
+    _react2.default.createElement(
+      'p',
+      null,
+      'Or use your FaceBook account to authorize'
+    )
+  );
+};
+
+var signInUpBtns = function signInUpBtns(props) {
+  return _react2.default.createElement(
+    'div',
+    { onClick: function onClick(e) {
+        e.currentTarget.querySelector('.active').classList.remove('active');
+        if (e.target && e.target.nodeName === 'H3') {
+          var btnValue = e.target.innerText;
+          e.target.classList.add('active');
+          props.dispatch(actions.openPopUp(btnValue === 'Sign Up' ? signUpPopUp : signInPopUp));
+        }
+      } },
+    _react2.default.createElement(
+      'h3',
+      { className: 'active' },
+      'Sign In'
+    ),
+    _react2.default.createElement(
+      'h3',
+      null,
+      'Sign Up'
+    )
+  );
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    title: state.reducer.popUpBody.title,
+    btns: state.reducer.popUpBody.btns,
+    body: state.reducer.popUpBody.body
+  };
+};
+
+var mapErrorsToProps = function mapErrorsToProps(state) {
+  return {
+    err: state.reducer.err
+  };
+};
+
+signInUpBtns = (0, _reactRedux.connect)(mapStateToProps)(signInUpBtns);
+signInForm = (0, _reactRedux.connect)(mapErrorsToProps)(signInForm);
+newsLetter = (0, _reactRedux.connect)(mapErrorsToProps)(newsLetter);
+
+var signInPopUp = exports.signInPopUp = {
+  btns: signInUpBtns,
+  body: signInForm,
+  err: ''
+};
+
+var signUpPopUp = exports.signUpPopUp = {
+  btns: signInUpBtns,
+  body: signUpForm,
+  err: ''
+};
+
+var newsLetterPopUp = exports.newsLetterPopUp = {
+  title: 'Subscribe to our newsletter',
+  body: newsLetter
+};
+
+/***/ }),
+
+/***/ 61:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -521,15 +840,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = configureStore;
 
-var _redux = __webpack_require__(34);
+var _redux = __webpack_require__(37);
 
-var _reduxThunk = __webpack_require__(115);
+var _reduxThunk = __webpack_require__(121);
 
 var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
-var _reactRouterRedux = __webpack_require__(116);
+var _reactRouterRedux = __webpack_require__(26);
 
-var _reducers = __webpack_require__(119);
+var _reducers = __webpack_require__(122);
 
 var _reducers2 = _interopRequireDefault(_reducers);
 
@@ -550,7 +869,7 @@ function configureStore(initialState) {
 
 /***/ }),
 
-/***/ 52:
+/***/ 62:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -566,33 +885,39 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDom = __webpack_require__(55);
+var _reactDom = __webpack_require__(65);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _reactRedux = __webpack_require__(15);
+var _reactRedux = __webpack_require__(8);
 
-var _reactRouterDom = __webpack_require__(18);
+var _reactRouterDom = __webpack_require__(20);
 
-var _store = __webpack_require__(49);
+var _reactRouterRedux = __webpack_require__(26);
+
+var _createBrowserHistory = __webpack_require__(45);
+
+var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
+
+var _store = __webpack_require__(61);
 
 var _store2 = _interopRequireDefault(_store);
 
-__webpack_require__(120);
+__webpack_require__(123);
 
-var _Header = __webpack_require__(122);
+var _Header = __webpack_require__(125);
 
 var _Header2 = _interopRequireDefault(_Header);
 
-var _Footer = __webpack_require__(124);
+var _Footer = __webpack_require__(127);
 
 var _Footer2 = _interopRequireDefault(_Footer);
 
-var _PopUp = __webpack_require__(125);
+var _PopUp = __webpack_require__(128);
 
 var _PopUp2 = _interopRequireDefault(_PopUp);
 
-var _routes = __webpack_require__(126);
+var _routes = __webpack_require__(129);
 
 var _routes2 = _interopRequireDefault(_routes);
 
@@ -605,6 +930,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var store = (0, _store2.default)({});
+var history = (0, _createBrowserHistory2.default)();
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
@@ -615,10 +941,10 @@ var mapStateToProps = function mapStateToProps(state) {
 var Root = function (_React$Component) {
   _inherits(Root, _React$Component);
 
-  function Root() {
+  function Root(props) {
     _classCallCheck(this, Root);
 
-    return _possibleConstructorReturn(this, (Root.__proto__ || Object.getPrototypeOf(Root)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Root.__proto__ || Object.getPrototypeOf(Root)).call(this, props));
   }
 
   _createClass(Root, [{
@@ -660,8 +986,8 @@ var WebApp = function (_React$Component2) {
         _reactRedux.Provider,
         { store: store },
         _react2.default.createElement(
-          _reactRouterDom.BrowserRouter,
-          null,
+          _reactRouterRedux.ConnectedRouter,
+          { history: history },
           _react2.default.createElement(Root, null)
         )
       );
@@ -684,4 +1010,4 @@ _reactDom2.default.render(_react2.default.createElement(WebApp, { ref: function 
 
 /***/ })
 
-},[52]);
+},[62]);

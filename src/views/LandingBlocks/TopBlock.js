@@ -1,13 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
+import {push} from 'react-router-redux';
 
 import {actions, signInPopUp, newsLetterPopUp} from 'utils/';
 
 const mapStateToProps = (state) => ({
-  popUpOpened: state.reducer.popUpOpened
+  popUpOpened: state.reducer.popUpOpened,
+  location: state.routing
 })
 
 const TopBlock = (props) => {
+
   return(
     <div>
       <h1>WebApp</h1>
@@ -17,6 +21,10 @@ const TopBlock = (props) => {
       <button onClick={()=>{
         props.dispatch(actions.openPopUp(signInPopUp));
       }}>Sign in</button>
+      <p><button onClick={(e)=>{
+        props.dispatch(push('/profile'));
+        console.log(props)
+      }}>Profile</button></p>
       <p>Fill admin admin in sign in pop up window and you will get to the profile page</p>
       <p>Also user can subscribe to newsletter</p>
       <button onClick={()=>{
