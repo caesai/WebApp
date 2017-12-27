@@ -1,31 +1,8 @@
-const reducerState = {
-  loggedIn: false,
-  popUpOpened: false,
-  popUpBody: {
-    title: '',
-    body: ''
-  },
-  err: ''
-}
+import popups from './popups';
+import authState from './auth';
+import { routerReducer } from 'react-router-redux';
+import { combineReducers } from 'redux';
 
-export default function reducer (state = reducerState, action) {
-  switch (action.type) {
-      case 'OPEN_POPUP':
-      return Object.assign({}, state, {
-        popUpOpened: true,
-        popUpBody: action.payload
-      });
-      case 'CLOSE_POPUP':
-      return Object.assign({}, state, {
-        popUpOpened: false,
-        popUpBody: {},
-        err: ''
-      });
-      case 'CATCH_POPUP_ERROR':
-      return Object.assign({}, state, {
-          err: action.err
-      });
-      default:
-      return state;
-  }
-}
+const rootReducer = combineReducers({popups, authState, routing: routerReducer});
+
+export default rootReducer;

@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import {actions} from 'utils/';
 
 const mapStateToProps = (state) => ({
-  popUpOpened: state.reducer.popUpOpened,
+  popUpOpened: state.popups.popUpOpened,
   popUpBody: {
-    title: state.reducer.popUpBody.title,
-    btns: state.reducer.popUpBody.btns,
-    body: state.reducer.popUpBody.body
+    title: state.popups.popUpBody.title,
+    btns: state.popups.popUpBody.btns,
+    body: state.popups.popUpBody.body
   }
 });
 

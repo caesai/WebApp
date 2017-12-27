@@ -1,68 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-export const actions = {
-  openPopUp: (payload) => ({
-    type: 'OPEN_POPUP',
-    payload
-  }),
-  closePopUp: () => ({
-    type: 'CLOSE_POPUP'
-  }),
-  throwPopUpError: (errmsg) => ({
-    type: 'CATCH_POPUP_ERROR',
-    err: errmsg
-  })
-}
-
-let newsLetter = (props) => {
-  return (
-    <form onSubmit={(e)=>{
-      e.preventDefault();
-      let inputs = e.target.querySelectorAll('input');
-      try {
-        inputs.forEach((val) => {
-          if (val.value === '') {
-            throw e;
-          }
-        })
-      } catch(e) {
-        props.dispatch(actions.throwPopUpError('Invalid email address'));
-      }
-    }}>
-      <p>Enter your email to subscribe</p>
-      <input type='text' />
-      <p className='errormsg'>{props.err ? props.err : null}</p>
-      <button type='submit'>Submit</button>
-    </form>
-  )
-}
-
-let signInForm = (props) => {
-  return (
-    <form onSubmit={(e)=>{
-      e.preventDefault();
-      let inputs = e.target.querySelectorAll('input');
-      try {
-        inputs.forEach((val) => {
-          if (val.value !== 'admin') {
-            throw e;
-          }
-        })
-      } catch(e) {
-        props.dispatch(actions.throwPopUpError('Invalid login or password'));
-      }
-    }}>
-      <p>Enter your login or email</p>
-      <input type='text' />
-      <p>Enter password</p>
-      <input type='password' />
-      <button type='submit'>Submit</button>
-      <p className='errormsg'>{props.err ? props.err : null}</p>
-      <p>Or use your FaceBook account to authorize</p>
-    </form>
-  )
-}
+import {actions} from './actions';
+import signInForm from './signInForm';
 
 const signUpForm = () => {
   return (
@@ -99,18 +39,40 @@ let signInUpBtns = (props) => {
   )
 }
 
+let newsLetter = (props) => {
+  return (
+    <form onSubmit={(e)=>{
+      e.preventDefault();
+      let inputs = e.target.querySelectorAll('input');
+      try {
+        inputs.forEach((val) => {
+          if (val.value === '') {
+            throw e;
+          }
+        })
+      } catch(e) {
+        props.dispatch(actions.throwPopUpError('Invalid email address'));
+      }
+    }}>
+      <p>Enter your email to subscribe</p>
+      <input type='text' />
+      <p className='errormsg'>{props.err ? props.err : null}</p>
+      <button type='submit'>Submit</button>
+    </form>
+  )
+}
+
 const mapStateToProps = (state) => ({
-  title: state.reducer.popUpBody.title,
-  btns: state.reducer.popUpBody.btns,
-  body: state.reducer.popUpBody.body
+  title: state.popups.popUpBody.title,
+  btns: state.popups.popUpBody.btns,
+  body: state.popups.popUpBody.body
 })
 
 const mapErrorsToProps = (state) => ({
-  err: state.reducer.err
+  err: state.popups.err
 })
 
 signInUpBtns = connect(mapStateToProps)(signInUpBtns);
-signInForm = connect(mapErrorsToProps)(signInForm);
 newsLetter = connect(mapErrorsToProps)(newsLetter);
 
 export const signInPopUp = {

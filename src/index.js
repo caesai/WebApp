@@ -14,12 +14,12 @@ import PopUp from './components/PopUp';
 import Routes from './routes';
 
 let store = configureStore({});
+
 const history = createHistory();
 
 const mapStateToProps = (state) => ({
-  popUpOpened: state.reducer.popUpOpened
+  popUpOpened: state.popups.popUpOpened
 })
-
 let Root = class extends React.Component{
   constructor(props) {
     super(props);

@@ -521,6 +521,7 @@ var TopBlock = function TopBlock(props) {
       _react2.default.createElement(
         'button',
         { onClick: function onClick(e) {
+            props.dispatch((0, _reactRouterRedux.push)('/profile'));
             console.log(props);
           } },
         'Profile'

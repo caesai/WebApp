@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {actions, signInPopUp} from 'utils/';
+import {actions} from 'utils/actions';
+import {signInPopUp} from 'utils/';
 
 import MainMenu from './header/MainMenu';
 
 const mapStateToProps = (state) => ({
-  popUpOpened: state.reducer.popUpOpened
+  popUpOpened: state.popups.popUpOpened
 })
 
 
