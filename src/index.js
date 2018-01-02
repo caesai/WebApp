@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import PopUp from './components/PopUp';
 
 import Routes from './routes';
+import {actions} from './utils/actions';
 
 let store = configureStore({});
 
@@ -19,7 +20,17 @@ const history = createHistory();
 
 const mapStateToProps = (state) => ({
   popUpOpened: state.popups.popUpOpened
-})
+});
+
+let token = localStorage.getItem('token');
+if (token !== null) {
+  store.dispatch(actions.auth({
+    name: 'admin',
+    isAuthenticated: true,
+    token: token
+  }));
+}
+
 let Root = class extends React.Component{
   constructor(props) {
     super(props);

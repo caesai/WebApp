@@ -1,11 +1,12 @@
 const initialState = {
   isAuthenticating: false,
   isAuthenticated: false,
+  token: '',
   name: '',
   redirectingTo: ''
 };
 
-export default function authState (state = initialState, action) {
+export default function user (state = initialState, action) {
   switch (action.type) {
     case 'LOGIN_REQUEST':
     return Object.assign({}, state, {
@@ -14,10 +15,16 @@ export default function authState (state = initialState, action) {
       redirectingTo: action.payload.nextUrl
     });
     case 'LOGIN_SUCCESS':
+    localStorage.setItem('token', action.payload.token);
     return Object.assign({}, state, {
+      isAuthenticating: false,
       name: action.payload.name,
-      isAuthenticated: action.payload.isAuthenticated
+      isAuthenticated: action.payload.isAuthenticated,
+      token: action.payload.token
     });
+    case 'LOGOUT':
+    localStorage.removeItem('token');
+    return initialState;
     default:
     return state;
   }

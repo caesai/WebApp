@@ -20,5 +20,12 @@ export const actions = {
         }
       })
     }
-  }
+  },
+  auth: (payload) => ({
+    type: 'LOGIN_SUCCESS',
+    payload
+  }),
+  logout: () => ({
+    type: 'LOGOUT'
+  })
 };
