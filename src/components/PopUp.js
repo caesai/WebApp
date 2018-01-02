@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {actions} from 'utils/';
+import {actions} from 'utils/actions';
 
 const mapStateToProps = (state) => ({
   popUpOpened: state.popups.popUpOpened,
@@ -15,18 +15,24 @@ const mapStateToProps = (state) => ({
 let PopUp = class extends React.Component{
   render() {
     return(
-      <div className='popUp'>
-        <div className='popUpCls' onClick={()=>{
+      <div className='blackbg' onClick={(e) => {
+        if (e.target === e.currentTarget) {
           this.props.dispatch(actions.closePopUp());
-        }}>
-          x
-        </div>
-        <div className='popUpHead'>
-          <h3>{this.props.popUpBody.title && this.props.popUpBody.title}</h3>
-          {this.props.popUpBody.btns ? <this.props.popUpBody.btns /> : null}
-        </div>
-        <div className='popUpBody'>
-          <this.props.popUpBody.body />
+        }
+      }}>
+        <div className='popUp'>
+          <div className='popUpCls' onClick={()=>{
+            this.props.dispatch(actions.closePopUp());
+          }}>
+            x
+          </div>
+          <div className='popUpHead'>
+            <h3>{this.props.popUpBody.title && this.props.popUpBody.title}</h3>
+            {this.props.popUpBody.btns ? <this.props.popUpBody.btns /> : null}
+          </div>
+          <div className='popUpBody'>
+            <this.props.popUpBody.body />
+          </div>
         </div>
       </div>
     )
