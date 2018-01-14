@@ -1,0 +1,24 @@
+.footerBlock {
+  display: inline-block;
+
+  &+.footerBlock {
+    float: right;
+  }
+
+  a {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin: 0 5px;
+    opacity: 0.73;
+    transition: 0.2s ease-out 0.1s;
+
+    &+a {
+      margin-right: 0;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

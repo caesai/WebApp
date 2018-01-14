@@ -54,13 +54,13 @@ var _auth = __webpack_require__(125);
 
 var _auth2 = _interopRequireDefault(_auth);
 
-var _reactRouterRedux = __webpack_require__(58);
+var _reactRouterRedux = __webpack_require__(57);
 
 var _redux = __webpack_require__(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var rootReducer = (0, _redux.combineReducers)({ popups: _popups2.default, authState: _auth2.default, routing: _reactRouterRedux.routerReducer });
+var rootReducer = (0, _redux.combineReducers)({ popups: _popups2.default, user: _auth2.default, routing: _reactRouterRedux.routerReducer });
 
 exports.default = rootReducer;
 
@@ -122,15 +122,16 @@ function popups() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = authState;
+exports.default = user;
 var initialState = {
   isAuthenticating: false,
   isAuthenticated: false,
+  token: '',
   name: '',
   redirectingTo: ''
 };
 
-function authState() {
+function user() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
 
@@ -142,10 +143,16 @@ function authState() {
         redirectingTo: action.payload.nextUrl
       });
     case 'LOGIN_SUCCESS':
+      localStorage.setItem('token', action.payload.token);
       return Object.assign({}, state, {
+        isAuthenticating: false,
         name: action.payload.name,
-        isAuthenticated: action.payload.isAuthenticated
+        isAuthenticated: action.payload.isAuthenticated,
+        token: action.payload.token
       });
+    case 'LOGOUT':
+      localStorage.removeItem('token');
+      return initialState;
     default:
       return state;
   }
@@ -178,9 +185,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(6);
 
-var _actions = __webpack_require__(17);
+var _actions = __webpack_require__(7);
 
-var _utils = __webpack_require__(28);
+var _utils = __webpack_require__(61);
 
 var _MainMenu = __webpack_require__(130);
 
@@ -196,6 +203,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
+    isAuthenticated: state.user.isAuthenticated,
+    userName: state.user.name,
     popUpOpened: state.popups.popUpOpened
   };
 };
@@ -223,18 +232,55 @@ var Header = function (_React$Component) {
           _react2.default.createElement(
             'ul',
             null,
+            _react2.default.createElement(
+              'li',
+              null,
+              _react2.default.createElement(
+                'a',
+                { href: '/' },
+                'Main Page'
+              )
+            ),
             _react2.default.createElement(_MainMenu2.default, null)
           ),
           _react2.default.createElement(
             'div',
             { className: 'logInBtn' },
-            _react2.default.createElement(
+            !this.props.isAuthenticated ? _react2.default.createElement(
               'a',
               { href: '#', onClick: function onClick(e) {
                   e.preventDefault();
                   _this2.props.dispatch(_actions.actions.openPopUp(_utils.signInPopUp));
                 } },
               'Sign In/Up'
+            ) : _react2.default.createElement(
+              'div',
+              { className: 'userMenu' },
+              _react2.default.createElement(
+                'p',
+                null,
+                this.props.userName
+              ),
+              _react2.default.createElement(
+                'ul',
+                { className: 'userMenuList' },
+                _react2.default.createElement(
+                  'li',
+                  null,
+                  _react2.default.createElement(
+                    'a',
+                    { href: '/profile' },
+                    'Profile'
+                  )
+                ),
+                _react2.default.createElement(
+                  'li',
+                  { onClick: function onClick() {
+                      _this2.props.dispatch(_actions.actions.logout());
+                    } },
+                  'Log Out'
+                )
+              )
             )
           )
         )
@@ -269,9 +315,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(6);
 
-var _reactRouterDom = __webpack_require__(13);
+var _reactRouterDom = __webpack_require__(10);
 
-var _actions = __webpack_require__(17);
+var _actions = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -295,13 +341,12 @@ var signInForm = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      console.log(this.props);
       return _react2.default.createElement(
         'form',
         { onSubmit: function onSubmit(e) {
             e.preventDefault();
             var input = e.target.querySelector('input');
-
+            // Fake authentication
             if (input.value !== 'admin') {
               _this2.props.dispatch(_actions.actions.throwPopUpError('Invalid login or password'));
             } else {
@@ -310,11 +355,16 @@ var signInForm = function (_React$Component) {
               }));
               setTimeout(function () {
                 if (_this2.props.isAuthenticating) {
-                  _this2.props.history.push(_this2.props.redirectingTo);
+                  _this2.props.dispatch(_actions.actions.auth({
+                    name: 'admin',
+                    isAuthenticated: true,
+                    token: 'serverToken'
+                  }));
                 }
                 _this2.props.dispatch(_actions.actions.closePopUp());
               }, 1000);
             }
+            // Fake authentication
           } },
         _react2.default.createElement(
           'p',
@@ -352,8 +402,8 @@ var signInForm = function (_React$Component) {
 
 var authStateToProps = function authStateToProps(state) {
   return {
-    isAuthenticating: state.authState.isAuthenticating,
-    redirectingTo: state.authState.redirectingTo
+    isAuthenticating: state.user.isAuthenticating,
+    redirectingTo: state.user.redirectingTo
   };
 };
 
@@ -501,7 +551,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(6);
 
-var _utils = __webpack_require__(28);
+var _actions = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -538,28 +588,36 @@ var PopUp = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { className: 'popUp' },
+        { className: 'blackbg', onClick: function onClick(e) {
+            if (e.target === e.currentTarget) {
+              _this2.props.dispatch(_actions.actions.closePopUp());
+            }
+          } },
         _react2.default.createElement(
           'div',
-          { className: 'popUpCls', onClick: function onClick() {
-              _this2.props.dispatch(_utils.actions.closePopUp());
-            } },
-          'x'
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'popUpHead' },
+          { className: 'popUp' },
           _react2.default.createElement(
-            'h3',
-            null,
-            this.props.popUpBody.title && this.props.popUpBody.title
+            'div',
+            { className: 'popUpCls', onClick: function onClick() {
+                _this2.props.dispatch(_actions.actions.closePopUp());
+              } },
+            'x'
           ),
-          this.props.popUpBody.btns ? _react2.default.createElement(this.props.popUpBody.btns, null) : null
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'popUpBody' },
-          _react2.default.createElement(this.props.popUpBody.body, null)
+          _react2.default.createElement(
+            'div',
+            { className: 'popUpHead' },
+            _react2.default.createElement(
+              'h3',
+              null,
+              this.props.popUpBody.title && this.props.popUpBody.title
+            ),
+            this.props.popUpBody.btns ? _react2.default.createElement(this.props.popUpBody.btns, null) : null
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'popUpBody' },
+            _react2.default.createElement(this.props.popUpBody.body, null)
+          )
         )
       );
     }
@@ -586,32 +644,28 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(13);
+var _reactRouterDom = __webpack_require__(10);
 
-var _reactRedux = __webpack_require__(6);
+var _AuthenticatedComponent = __webpack_require__(134);
 
-var _MainPage = __webpack_require__(134);
+var _AuthenticatedComponent2 = _interopRequireDefault(_AuthenticatedComponent);
+
+var _MainPage = __webpack_require__(135);
 
 var _MainPage2 = _interopRequireDefault(_MainPage);
 
-var _Profile = __webpack_require__(136);
+var _Profile = __webpack_require__(137);
 
 var _Profile2 = _interopRequireDefault(_Profile);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var mapStateToProps = function mapStateToProps(state) {
-  return {
-    isAuthenticated: state.auth.isAuthenticated
-  };
-};
 
 var Routes = function Routes() {
   return _react2.default.createElement(
     _reactRouterDom.Switch,
     null,
     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _MainPage2.default }),
-    _react2.default.createElement(_reactRouterDom.Route, { path: '/profile', component: _Profile2.default })
+    _react2.default.createElement(_reactRouterDom.Route, { path: '/profile', component: (0, _AuthenticatedComponent2.default)(_Profile2.default) })
   );
 };
 
@@ -631,11 +685,105 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+exports.default = requireAuthentication;
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _TopBlock = __webpack_require__(135);
+var _reactRedux = __webpack_require__(6);
+
+var _reactRouterDom = __webpack_require__(10);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function requireAuthentication(Component) {
+  var AuthenticatedComponent = function (_React$Component) {
+    _inherits(AuthenticatedComponent, _React$Component);
+
+    function AuthenticatedComponent() {
+      _classCallCheck(this, AuthenticatedComponent);
+
+      return _possibleConstructorReturn(this, (AuthenticatedComponent.__proto__ || Object.getPrototypeOf(AuthenticatedComponent)).apply(this, arguments));
+    }
+
+    _createClass(AuthenticatedComponent, [{
+      key: 'componentWillMount',
+      value: function componentWillMount() {
+        this.checkAuth(this.props.user);
+      }
+    }, {
+      key: 'componentWillReceiveProps',
+      value: function componentWillReceiveProps(nextProps) {
+        this.checkAuth(nextProps.user);
+      }
+    }, {
+      key: 'checkAuth',
+      value: function checkAuth(user) {
+        var _this2 = this;
+
+        if (!user.isAuthenticated) {
+          setTimeout(function () {
+            _this2.props.history.push('/');
+          }, 2000);
+        }
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        return _react2.default.createElement(
+          'div',
+          null,
+          this.props.user.isAuthenticated === true ? _react2.default.createElement(Component, this.props) : _react2.default.createElement(
+            'div',
+            { className: 'container' },
+            _react2.default.createElement(
+              'p',
+              null,
+              'You need to be authenticated to see this page content'
+            )
+          )
+        );
+      }
+    }]);
+
+    return AuthenticatedComponent;
+  }(_react2.default.Component);
+
+  function mapStateToProps(state) {
+    return {
+      user: state.user
+    };
+  }
+
+  return (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(mapStateToProps)(AuthenticatedComponent));
+}
+
+/***/ }),
+
+/***/ 135:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _TopBlock = __webpack_require__(136);
 
 var _TopBlock2 = _interopRequireDefault(_TopBlock);
 
@@ -674,7 +822,7 @@ exports.default = MainPage;
 
 /***/ }),
 
-/***/ 135:
+/***/ 136:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -692,11 +840,11 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(6);
 
-var _reactRouterDom = __webpack_require__(13);
+var _reactRouterDom = __webpack_require__(10);
 
-var _utils = __webpack_require__(28);
+var _utils = __webpack_require__(61);
 
-var _actions = __webpack_require__(17);
+var _actions = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -785,7 +933,7 @@ exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(mapSt
 
 /***/ }),
 
-/***/ 136:
+/***/ 137:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -840,49 +988,7 @@ exports.default = Profile;
 
 /***/ }),
 
-/***/ 17:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var actions = exports.actions = {
-  openPopUp: function openPopUp(payload) {
-    return {
-      type: 'OPEN_POPUP',
-      payload: payload
-    };
-  },
-  closePopUp: function closePopUp() {
-    return {
-      type: 'CLOSE_POPUP'
-    };
-  },
-  throwPopUpError: function throwPopUpError(errmsg) {
-    return {
-      type: 'CATCH_POPUP_ERROR',
-      err: errmsg
-    };
-  },
-  login: function login(payload) {
-    return function (dispatch) {
-      dispatch({
-        type: 'LOGIN_REQUEST',
-        payload: {
-          name: payload.name,
-          nextUrl: '/profile'
-        }
-      });
-    };
-  }
-};
-
-/***/ }),
-
-/***/ 28:
+/***/ 61:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -899,7 +1005,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(6);
 
-var _actions = __webpack_require__(17);
+var _actions = __webpack_require__(7);
 
 var _signInForm = __webpack_require__(129);
 
@@ -1067,11 +1173,11 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _reactRedux = __webpack_require__(6);
 
-var _reactRouterDom = __webpack_require__(13);
+var _reactRouterDom = __webpack_require__(10);
 
-var _reactRouterRedux = __webpack_require__(58);
+var _reactRouterRedux = __webpack_require__(57);
 
-var _createBrowserHistory = __webpack_require__(45);
+var _createBrowserHistory = __webpack_require__(44);
 
 var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
 
@@ -1097,6 +1203,8 @@ var _routes = __webpack_require__(133);
 
 var _routes2 = _interopRequireDefault(_routes);
 
+var _actions = __webpack_require__(7);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1114,6 +1222,16 @@ var mapStateToProps = function mapStateToProps(state) {
     popUpOpened: state.popups.popUpOpened
   };
 };
+
+var token = localStorage.getItem('token');
+if (token !== null) {
+  store.dispatch(_actions.actions.auth({
+    name: 'admin',
+    isAuthenticated: true,
+    token: token
+  }));
+}
+
 var Root = function (_React$Component) {
   _inherits(Root, _React$Component);
 
@@ -1183,6 +1301,60 @@ _reactDom2.default.render(_react2.default.createElement(WebApp, { ref: function 
   } }), document.getElementById('webapp'), function () {
   console.log(this); // instance
 });
+
+/***/ }),
+
+/***/ 7:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var actions = exports.actions = {
+  openPopUp: function openPopUp(payload) {
+    return {
+      type: 'OPEN_POPUP',
+      payload: payload
+    };
+  },
+  closePopUp: function closePopUp() {
+    return {
+      type: 'CLOSE_POPUP'
+    };
+  },
+  throwPopUpError: function throwPopUpError(errmsg) {
+    return {
+      type: 'CATCH_POPUP_ERROR',
+      err: errmsg
+    };
+  },
+  login: function login(payload) {
+    return function (dispatch) {
+      dispatch({
+        type: 'LOGIN_REQUEST',
+        payload: {
+          name: payload.name,
+          nextUrl: '/profile'
+        }
+      });
+    };
+  },
+
+  auth: function auth(payload) {
+    return {
+      type: 'LOGIN_SUCCESS',
+      payload: payload
+    };
+  },
+  logout: function logout() {
+    return {
+      type: 'LOGOUT'
+    };
+  }
+};
 
 /***/ })
 
