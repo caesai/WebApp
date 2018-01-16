@@ -1,16 +1,21 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import requireAuthentication from '../containers/AuthenticatedComponent'
+import { generateAsyncRouteComponent } from '../utils/serverRouting';
 
 import MainPage from '../views/MainPage';
-import Profile from '../views/Profile';
 
-const Routes = () => (
-  <Switch>
-    <Route exact path='/' component={MainPage} />
-    <Route path="/profile" component={requireAuthentication(Profile)} />
-  </Switch>
-)
-
-
-export default Routes;
+export default [
+  {
+    component: MainPage,
+    path: parentRoute => `${parentRoute}/`,
+    routes: [
+      {
+        path: parentRoute => `${parentRoute}/profile`,
+        component: generateAsyncRouteComponent({
+          loader: () => import('../views/Profile')
+        })
+      }
+    ]
+  }
+];

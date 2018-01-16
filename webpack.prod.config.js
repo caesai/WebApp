@@ -4,7 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
-module.exports = {
+const clientConfig = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -17,7 +17,15 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel-loader' },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        include: [path.resolve('./src')],
+        options: {
+          plugins: ['dynamic-import-webpack']
+        }
+      },
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
@@ -66,10 +74,32 @@ module.exports = {
       name: 'manifest',
       minChunks: Infinity
     })
-  ],
-  devServer: {
-    historyApiFallback: true,
-    publicPath: 'http://localhost:8080/dist/',
-    contentBase: './dist/'
+  ]
+};
+
+const serverConfig = {
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: './',
+    filename: 'js/index.server.bundle.js',
+    libraryTarget: 'commonjs2'
+  },
+  resolve: {
+    modules: [__dirname, 'node_modules', 'src']
+  },
+  module: {
+    loaders: [{
+      loader: 'babel-loader',
+      include: [path.resolve('./src')],
+      options: {
+        plugins: ['dynamic-import-node']
+      }
+    }]
   }
 };
+
+module.exports = [
+  clientConfig,
+  serverConfig
+];
