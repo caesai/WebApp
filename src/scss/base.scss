@@ -9,6 +9,12 @@ body {
   font-family: ProximaRegular;
 }
 
+h1 {
+  span {
+    font-size: 9px;
+  }
+}
+
 .container {
   display: table;
   max-width: 1200px;

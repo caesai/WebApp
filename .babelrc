@@ -1,14 +1,17 @@
 {
-  "presets": ["env", "react"],
+  "presets": ["env", "react", "stage-2"],
   "plugins": [
-    ["module-resolver", {
-      "root": ["./src"],
-      "alias": {
-        "test": "./test",
-        "underscore": "lodash"
-      }
-    },
-    "dynamic-import-webpack",
-    "dynamic-import-node"]
+    [
+      "module-resolver", {
+        "root": ["./src"],
+        "alias": {
+          "test": "./test",
+          "underscore": "lodash"
+        }
+      },
+      "dynamic-import-webpack",
+      "dynamic-import-node",
+      "universal-import"
+    ]
   ]
 }

@@ -1,20 +1,28 @@
-const webpack = require('webpack');
 const path = require('path');
+const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+const AutoDllPlugin = require('autodll-webpack-plugin');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 
-const clientConfig = {
-  entry: './src/index.js',
+module.exports = {
+  name: 'client',
+  devtool: 'source-map',
+  entry: [
+    'babel-polyfill',
+    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false',
+    path.resolve(__dirname, '../src/index.js')
+  ],
   target: 'web',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
     publicPath: '/dist/',
     filename: 'js/[name]-[hash].bundle.js',
     chunkFilename: 'js/[name]-[hash].js'
   },
   resolve: {
-    modules: [__dirname, 'node_modules', 'src']
+    modules: [path.resolve(__dirname,'../node_modules')]
   },
   module: {
     loaders: [
@@ -22,7 +30,6 @@ const clientConfig = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-        include: [path.resolve('./src')],
         options: {
           plugins: ['dynamic-import-webpack']
         }
@@ -74,7 +81,7 @@ const clientConfig = {
       inject: 'body'
     }),
     new HtmlWebpackHarddiskPlugin({
-      outputPath: path.resolve(__dirname, 'dist'),
+      outputPath: path.resolve(__dirname, '../dist'),
       inject: 'body'
     }),
     new webpack.optimize.CommonsChunkPlugin({
@@ -84,6 +91,11 @@ const clientConfig = {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       minChunks: Infinity
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('development')
+      }
     })
   ],
   devServer: {
@@ -92,55 +104,3 @@ const clientConfig = {
     contentBase: './dist/'
   }
 };
-
-const serverConfig = {
-  entry: './src/index.js',
-  target: 'node',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/dist/',
-    filename: 'js/server.bundle.js',
-    libraryTarget: 'commonjs2'
-  },
-  resolve: {
-    modules: [__dirname, 'node_modules', 'src']
-  },
-  module: {
-    loaders: [{
-      loader: 'babel-loader',
-      include: [path.resolve('./src')],
-      exclude: /node_modules/,
-      options: {
-        plugins: ['dynamic-import-node']
-      }
-    },
-    {
-      test: /\.scss$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: ['css-loader?minimize=true', 'sass-loader']
-      })
-    },
-    {
-        test: /\.(png|jpeg|jpg|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '/img/[name].[ext]'
-            }
-          }
-        ]
-    },
-    {
-      test: /\.(otf|eot|svg|ttf|woff|woff2)$/,
-      use: ['url-loader?limit=100&name=fonts/[name].[ext]']
-    }]
-  },
-  plugins: [new ExtractTextPlugin('css/styles.css')]
-};
-
-module.exports = [
-  clientConfig,
-  serverConfig
-];

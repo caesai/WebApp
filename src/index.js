@@ -1,11 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { connect, Provider } from 'react-redux';
-import {  withRouter, StaticRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
+import {  withRouter, StaticRouter, BrowserRouter} from 'react-router-dom';
 /*import createHistory from 'history/createBrowserHistory';*/
-import {LocalStorage} from 'node-localstorage';
-import configureStore from './store/store';
 import { renderRoutes } from 'react-router-config';
+import configureStore from './store/store';
 import './scss/base.scss';
 
 import Header from './components/Header';
@@ -18,15 +17,10 @@ import { convertCustomRouteConfig, ensureReady } from './utils/serverRouting';
 
 const routeConfig = convertCustomRouteConfig(routes);
 
-let store = configureStore({});
-
 const mapStateToProps = (state) => ({
   popUpOpened: state.popups.popUpOpened
 });
 
-if (typeof localStorage === 'undefined' || localStorage === null) {
-  var localStorage = new LocalStorage('./scratch');
-}
 
 let token = localStorage.getItem('token');
 
@@ -37,6 +31,10 @@ if (token !== null) {
     token: token
   }));
 }
+
+
+
+let store = configureStore({});
 
 if (typeof window !== 'undefined') {
   ensureReady(routeConfig).then(() => {
@@ -57,27 +55,27 @@ let Root = class extends React.Component{
   render() {
     return (
         <div>
+        <Header />
           {this.props.popUpOpened ? <PopUp /> : null}
+          <Footer />
         </div>
     )
   }
 }
 
 Root = withRouter(connect(mapStateToProps)(Root));
-
-export default function render2(location, props) {
+export default Root;
+function render2(location, props) {
   return ensureReady(routeConfig, location).then(() => (
-    <Provider store={store}>
-      <StaticRouter context={{}} location={location}>
+    <StaticRouter context={{}} location={location}>
+      <div>
+        <Header />
         <div>
-          <Header />
-          <div>
-            {renderRoutes(routeConfig, props)}
-          </div>
-          <Root />
-          <Footer />
+          {renderRoutes(routeConfig, props)}
         </div>
-      </StaticRouter>
-    </Provider>
+        <Root />
+        <Footer />
+      </div>
+    </StaticRouter>
   ));
 }

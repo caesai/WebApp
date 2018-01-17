@@ -13,7 +13,7 @@ class TopBlock extends React.Component {
   render(){
     return(
       <div>
-        <h1>WebApp</h1>
+        <h1>WebApp <span>v. 1.0.0</span></h1>
         <p><b>WebApp</b> is a React based JavaScript application with main landing page consisting info about some product and
         user profile page</p>
         <p>Application provides authorization through OAuth2 or back-end authorization on server side</p>
