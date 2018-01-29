@@ -1,61 +1,61 @@
-const fs = require('fs');
-
-import express from 'express';
 import React from 'react';
+import express from 'express';
 import ReactDOMServer from 'react-dom/server';
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
-import webpackHotServerMiddleware from 'webpack-hot-server-middleware';
-import clientConfig from '../webpack/client.dev';
-import serverConfig from '../webpack/server.dev';
+import { StaticRouter, matchPath } from 'react-router-dom';
+import App from '../src/App';
 import { Provider } from 'react-redux';
 import configureStore from '../src/store/store';
+import routes from '../src/routes/';
 
-let store = configureStore({});
+const path = require('path');
 
 const PORT = 3000;
 
-const DEV = process.env.NODE_ENV === 'development'
-const publicPath = clientConfig.output.publicPath
-const outputPath = clientConfig.output.path
-const app = express()
+const app = express();
 
-const template = fs.readFileSync('./index.html', 'utf8');
+app.use(express.static('dist'));
 
-app.use('/dist', express.static(`${__dirname}/dist`));
+app.get('*', (req, res, next) => {
+  const store = configureStore({});
 
-/*
-app.get('*', (req, res) => {
+  const promises = routes.reduce((acc, route) => {
+    if (matchPath(req.url, route) && route.component && route.component.initialAction) {
+      acc.push(Promise.resolve(store.dispatch(route.component.initialAction())));
+    }
+    return acc;
+  }, []);
+  Promise.all(promises)
+    .then(() => {
+  const preloadedState = store.getState();
+  const markup = ReactDOMServer.renderToString(
+    <Provider store={store}>
+      <StaticRouter context={preloadedState} location={req.url}>
+        <App />
+      </StaticRouter>
+    </Provider>
+  );
 
-  App.default(req.url).then((reactComponent) => {
-    const result = ReactDOMServer.renderToString(
-      <Provider store={store}>
-        {reactComponent}
-      </Provider>
-    );
-    const html = template.replace('{{thing}}', result);
-    res.send(html);
-    res.end();
-  });
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>WebApp - React based web application</title>
+        <link rel="stylesheet" href="./css/styles.css">
+        <script type="text/javascript" src="./js/manifest.bundle.js" defer></script>
+        <script type="text/javascript" src="./js/vendor.bundle.js" defer></script>
+        <script type="text/javascript" src="./js/main.bundle.js" defer></script>
+        <script>
+          window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
+        </script>
+      </head>
+      <body>
+        <div id="root">${markup}</div>
+      </body>
+    </html>
+  `);
+})
+ .catch(next);
 });
-*/
-
-const multiCompiler = webpack([clientConfig, serverConfig])
-const clientCompiler = multiCompiler.compilers[0]
-/*
-app.use(webpackDevMiddleware(multiCompiler, { publicPath }))
-app.use(webpackHotMiddleware(clientCompiler))
-app.use(
-  // keeps serverRender updated with arg: { clientStats, outputPath }
-  webpackHotServerMiddleware(multiCompiler, {
-    serverRendererOptions: { outputPath }
-  })
-)
-*/
-
-const webpackDevMiddlewareInstance = require('webpack-dev-middleware')(multiCompiler);
-app.use(webpackDevMiddlewareInstance);
 
 app.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);

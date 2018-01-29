@@ -11,9 +11,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "devserver": "rm -rf dist/ && webpack && webpack-dev-server --hot --inline",
     "dev": "npm run buildClient && npm run buildServer",
+    "build": "webpack --progress --config webpack/webpack.config.js",
     "buildClient": "webpack --progress --config webpack/client.dev.js",
-    "buildServer": "webpack --progress --config webpack/server.dev.js",
-    "release": "webpack --config webpack.prod.config.js"
+    "buildServer": "webpack --progress --config webpack/server.dev.js"
   },
   "author": "Vasily Kharlamov",
   "license": "MIT",
@@ -29,10 +29,8 @@
     "react-router-config": "^1.0.0-beta.4",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-universal-component": "^2.8.1",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
-    "webpack-flush-chunks": "^1.2.3"
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "autodll-webpack-plugin": "^0.3.8",

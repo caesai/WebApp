@@ -1,19 +1,15 @@
 const path = require('path');
-const fs = require('fs')
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-const res = p => path.resolve(__dirname, p);
 
 module.exports = {
   name: 'server',
   devtool: 'eval',
-  entry: ['babel-polyfill', res('../server/render.js')],
+  entry: path.resolve(__dirname,'../server/index.js'),
   target: 'node',
   output: {
-    path: res('../buildServer'),
+    path: path.resolve(__dirname,'../'),
     publicPath: '/dist/',
-    filename: 'server.bundle.js',
+    filename: 'server.js',
     libraryTarget: 'commonjs2'
   },
   resolve: {
@@ -30,10 +26,7 @@ module.exports = {
     },
     {
       test: /\.scss$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: ['css-loader?minimize=true', 'sass-loader']
-      })
+      use: ['css-loader/locals']
     },
     {
         test: /\.(png|jpeg|jpg|gif)$/,
@@ -41,7 +34,20 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: '/img/[name].[ext]'
+              name: '/img/[name].[ext]',
+              emit: false
+            }
+          }
+        ]
+    },
+    {
+        test: /\.(png|jpeg|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '/img/[name].[ext]',
+              emit: false
             }
           }
         ]
@@ -55,7 +61,6 @@ module.exports = {
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
-    new ExtractTextPlugin('css/styles.css'),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('development')

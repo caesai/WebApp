@@ -4,18 +4,18 @@ import requireAuthentication from '../containers/AuthenticatedComponent'
 import { generateAsyncRouteComponent } from '../utils/serverRouting';
 
 import MainPage from '../views/MainPage';
+import Profile from '../views/Profile';
 
-export default [
+const routes = [
   {
+    path: '/',
     component: MainPage,
-    path: parentRoute => `${parentRoute}/`,
-    routes: [
-      {
-        path: parentRoute => `${parentRoute}/profile`,
-        component: generateAsyncRouteComponent({
-          loader: () => import('../views/Profile')
-        })
-      }
-    ]
+    exact: true
+  },
+  {
+    path: '/profile',
+    component: Profile
   }
 ];
+
+export default routes;

@@ -6,7 +6,7 @@ export default async (req, res) => {
   const preLoadedState = {} // onBeforeChange will authenticate using this
 
   const history = createHistory({ initialEntries: [req.path] })
-  const { store, thunk } = configureStore(history, preLoadedState)
+  const { store, thunk } = configureStore(history)
 
   // if not using onBeforeChange + jwTokens, you can also async authenticate
   // here against your db (i.e. using req.cookies.sessionId)

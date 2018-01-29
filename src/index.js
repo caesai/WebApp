@@ -1,81 +1,22 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { connect } from 'react-redux';
-import {  withRouter, StaticRouter, BrowserRouter} from 'react-router-dom';
-/*import createHistory from 'history/createBrowserHistory';*/
-import { renderRoutes } from 'react-router-config';
-import configureStore from './store/store';
+import { hydrate } from 'react-dom';
+import App from './App';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import configureStore from '../src/store/store';
 import './scss/base.scss';
 
-import Header from './components/Header';
-import Footer from './components/Footer';
-import PopUp from './components/PopUp';
+const preloadedState = window.__PRELOADED_STATE__
 
-import routes from './routes';
-import {actions} from './utils/actions';
-import { convertCustomRouteConfig, ensureReady } from './utils/serverRouting';
+delete window.__PRELOADED_STATE__
 
-const routeConfig = convertCustomRouteConfig(routes);
+let store = configureStore(preloadedState);
 
-const mapStateToProps = (state) => ({
-  popUpOpened: state.popups.popUpOpened
-});
-
-
-let token = localStorage.getItem('token');
-
-if (token !== null) {
-  store.dispatch(actions.auth({
-    name: 'admin',
-    isAuthenticated: true,
-    token: token
-  }));
-}
-
-
-
-let store = configureStore({});
-
-if (typeof window !== 'undefined') {
-  ensureReady(routeConfig).then(() => {
-    render(
-      (
-        <BrowserRouter>
-          { renderRoutes(routeConfig) }
-        </BrowserRouter>
-      )
-    );
-  });
-}
-
-let Root = class extends React.Component{
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-        <div>
-        <Header />
-          {this.props.popUpOpened ? <PopUp /> : null}
-          <Footer />
-        </div>
-    )
-  }
-}
-
-Root = withRouter(connect(mapStateToProps)(Root));
-export default Root;
-function render2(location, props) {
-  return ensureReady(routeConfig, location).then(() => (
-    <StaticRouter context={{}} location={location}>
-      <div>
-        <Header />
-        <div>
-          {renderRoutes(routeConfig, props)}
-        </div>
-        <Root />
-        <Footer />
-      </div>
-    </StaticRouter>
-  ));
-}
+hydrate(
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
+  document.getElementById('root')
+)

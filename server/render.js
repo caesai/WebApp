@@ -10,7 +10,7 @@ export default ({ clientStats }) => async (req, res, next) => {
   const store = await configureStore(req, res)
   if (!store) return // no store means redirect was already served
 
-  const app = createApp(WebApp, store)
+  const app = createApp(Root, store)
   const appString = ReactDOM.renderToString(app)
   const stateJson = JSON.stringify(store.getState())
   const chunkNames = flushChunkNames()
@@ -38,8 +38,8 @@ export default ({ clientStats }) => async (req, res, next) => {
   )
 }
 
-const createApp = (WebApp, store) =>{(
+const createApp = (App, store) =>{(
   <Provider store={store}>
-    <Root />
+    <App />
   </Provider>
 )}
