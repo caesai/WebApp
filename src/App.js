@@ -32,16 +32,16 @@ let App = class extends React.Component{
   }
   render() {
     return (
-          <div>
-            <Header />
-            <div>
-              <Switch>
-                {routes.map((route, i) => <Route key={i} {...route} />)}
-              </Switch>
-            </div>
-            <Footer />
-            {this.props.popUpOpened ? <PopUp /> : null}
-          </div>
+      <div>
+        <Header />
+        <div>
+          <Switch>
+            {routes.map((route, i) => <Route key={i} {...route} />)}
+          </Switch>
+        </div>
+        <Footer />
+        {this.props.popUpOpened ? <PopUp /> : null}
+      </div>
     );
   }
 }

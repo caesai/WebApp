@@ -17,7 +17,7 @@ module.exports = {
   target: 'web',
   output: {
     path: path.resolve(__dirname, '../dist'),
-    publicPath: '/dist/',
+    publicPath: '/',
     filename: 'js/[name].bundle.js',
     chunkFilename: 'js/[name]-[hash].js'
   },
@@ -70,20 +70,20 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('css/styles.css'),
-    new HtmlWebpackPlugin({
-      alwaysWriteToDisk: true,
-      title: 'WebApp',
-      template: 'template.html',
-      files: {
-        css: [ 'css/styles.css' ],
-        js: [ 'js/main.bundle.js']
-      },
-      inject: 'body'
-    }),
-    new HtmlWebpackHarddiskPlugin({
-      outputPath: path.resolve(__dirname, '../dist'),
-      inject: 'body'
-    }),
+    // new HtmlWebpackPlugin({
+    //   alwaysWriteToDisk: true,
+    //   title: 'WebApp',
+    //   template: 'template.html',
+    //   files: {
+    //     css: [ 'css/styles.css' ],
+    //     js: [ 'js/main.bundle.js']
+    //   },
+    //   inject: 'body'
+    // }),
+    // new HtmlWebpackHarddiskPlugin({
+    //   outputPath: path.resolve(__dirname, '../dist'),
+    //   inject: 'body'
+    // }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: module => module.context && module.context.indexOf('node_modules') !== -1
@@ -96,7 +96,8 @@ module.exports = {
       'process.env': {
         NODE_ENV: JSON.stringify('development')
       }
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
     historyApiFallback: true,

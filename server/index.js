@@ -13,11 +13,20 @@ const PORT = 3000;
 
 const app = express();
 
-app.use(express.static('dist'));
+express.static.mime.define(
+  {
+    'Content-Type': 'text/event-stream',
+    'text/javascript; charset=utf-8': ['js'],
+    'application/json; charset=utf-8': ['json'],
+    'application/manifest+json; charset=utf-8': ['webmanifest']
+  },
+  true
+);
+
+app.use(express.static('./dist'));
 
 app.get('*', (req, res, next) => {
   const store = configureStore({});
-
   const promises = routes.reduce((acc, route) => {
     if (matchPath(req.url, route) && route.component && route.component.initialAction) {
       acc.push(Promise.resolve(store.dispatch(route.component.initialAction())));
@@ -39,11 +48,12 @@ app.get('*', (req, res, next) => {
     <!DOCTYPE html>
     <html>
       <head>
+        <meta charset="utf-8" />
         <title>WebApp - React based web application</title>
-        <link rel="stylesheet" href="./css/styles.css">
-        <script type="text/javascript" src="./js/manifest.bundle.js" defer></script>
-        <script type="text/javascript" src="./js/vendor.bundle.js" defer></script>
-        <script type="text/javascript" src="./js/main.bundle.js" defer></script>
+        <link rel="stylesheet" href="/css/styles.css">
+        <script type="text/javascript" src="/js/manifest.bundle.js" defer></script>
+        <script type="text/javascript" src="/js/vendor.bundle.js" defer></script>
+        <script type="text/javascript" src="/js/main.bundle.js" defer></script>
         <script>
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
         </script>

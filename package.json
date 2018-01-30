@@ -9,11 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devserver": "rm -rf dist/ && webpack && webpack-dev-server --hot --inline",
-    "dev": "npm run buildClient && npm run buildServer",
     "build": "webpack --progress --config webpack/webpack.config.js",
-    "buildClient": "webpack --progress --config webpack/client.dev.js",
-    "buildServer": "webpack --progress --config webpack/server.dev.js"
+    "server": "babel-node server.js"
   },
   "author": "Vasily Kharlamov",
   "license": "MIT",
