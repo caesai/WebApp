@@ -40,7 +40,7 @@ let App = class extends React.Component{
           </Switch>
         </div>
         <Footer />
-        {this.props.popUpOpened ? <PopUp /> : null}
+        {this.props.popUpOpened && <PopUp />}
       </div>
     );
   }

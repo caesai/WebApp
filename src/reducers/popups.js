@@ -11,20 +11,20 @@ const reducerState = {
 export default function popups (state = reducerState, action) {
   switch (action.type) {
     case 'OPEN_POPUP':
-    return Object.assign({}, state, {
-      popUpOpened: true,
-      popUpBody: action.payload
-    });
+      return Object.assign({}, state, {
+        popUpOpened: true,
+        popUpBody: action.payload
+      });
     case 'CLOSE_POPUP':
-    return Object.assign({}, state, {
-      popUpOpened: false,
-      popUpBody: {},
-      err: ''
-    });
+      return Object.assign({}, state, {
+        popUpOpened: false,
+        popUpBody: {},
+        err: ''
+      });
     case 'CATCH_POPUP_ERROR':
-    return Object.assign({}, state, {
-        err: action.err
-    });
+      return Object.assign({}, state, {
+          err: action.payload
+      });
     default:
     return state;
   }

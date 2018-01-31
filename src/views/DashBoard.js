@@ -3,7 +3,7 @@ import React from 'react';
 export default class DashBoard extends React.Component{
   render() {
     return(
-      <div>
+      <div className='container'>
         <h1>DashBoard</h1>
       </div>
     )

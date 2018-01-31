@@ -9,6 +9,8 @@ Working example is running on http://arbooze.ru
 
 # Repository structure
 1. /src - frontend sources (Web Application Code)
+2. /webpack - config folder for webpack
+3. /server - config folder for server side on express.js
 
 # Development setup
 To set up application and run it locally:

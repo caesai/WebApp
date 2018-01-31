@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {actions} from 'utils/actions';
+import {actions} from '../actions';
 
 const mapStateToProps = (state) => ({
   popUpOpened: state.popups.popUpOpened,

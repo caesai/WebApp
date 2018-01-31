@@ -1,9 +1,8 @@
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
 import requireAuthentication from '../containers/AuthenticatedComponent'
-import { generateAsyncRouteComponent } from '../utils/serverRouting';
 
 import MainPage from '../views/MainPage';
+import DashBoard from '../views/DashBoard';
 import Profile from '../views/Profile';
 
 const routes = [
@@ -14,7 +13,11 @@ const routes = [
   },
   {
     path: '/profile',
-    component: Profile
+    component: requireAuthentication(Profile)
+  },
+  {
+    path: '/dashboard',
+    component: requireAuthentication(DashBoard)
   }
 ];
 

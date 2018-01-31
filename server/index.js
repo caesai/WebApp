@@ -15,7 +15,6 @@ const app = express();
 
 express.static.mime.define(
   {
-    'Content-Type': 'text/event-stream',
     'text/javascript; charset=utf-8': ['js'],
     'application/json; charset=utf-8': ['json'],
     'application/manifest+json; charset=utf-8': ['webmanifest']

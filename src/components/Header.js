@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
-import {actions} from 'utils/actions';
+import { Link } from 'react-router-dom'
+import {actions} from '../actions';
 import {signInPopUp} from 'utils/';
 
 import MainMenu from './header/MainMenu';
@@ -12,14 +12,13 @@ const mapStateToProps = (state) => ({
   popUpOpened: state.popups.popUpOpened
 })
 
-
 let Header = class extends React.Component{
   render() {
     return (
       <div className='header'>
         <div className='container'>
           <ul>
-            <li><a href='/'>Main Page</a></li>
+            <li><Link to='/'>Main Page</Link></li>
             <MainMenu />
           </ul>
           <div className='logInBtn'>
@@ -28,10 +27,13 @@ let Header = class extends React.Component{
                 e.preventDefault();
                 this.props.dispatch(actions.openPopUp(signInPopUp));
               }}>Sign In/Up</a> :
-              <div className='userMenu'>
+              <div className='userMenu' onClick={(e)=>{
+                e.currentTarget.classList.toggle('active');
+              }}>
                 <p>{this.props.userName}</p>
                 <ul className='userMenuList'>
-                  <li><a href='/profile'>Profile</a></li>
+                  <li><Link to='/profile'>Profile</Link></li>
+                  <li><Link to='/dashboard'>Dashboard</Link></li>
                   <li onClick={()=>{
                     this.props.dispatch(actions.logout());
                   }}>Log Out</li>

@@ -6,9 +6,9 @@ export const actions = {
   closePopUp: () => ({
     type: 'CLOSE_POPUP'
   }),
-  throwPopUpError: (errmsg) => ({
+  throwPopUpError: (payload) => ({
     type: 'CATCH_POPUP_ERROR',
-    err: errmsg
+    payload
   }),
   login(payload) {
     return (dispatch) => {

@@ -1,5 +1,6 @@
 .header {
   ul {
+
     display: inline-block;
     list-style: none;
     padding: 0;
@@ -13,5 +14,35 @@
   .logInBtn {
     float: right;
     padding: 15px 0;
+  }
+}
+
+.userMenu {
+  position: relative;
+
+  .userMenuList {
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 10px;
+    right: 0;
+
+    li {
+      display: block;
+      cursor: pointer;
+      opacity: 0.7;
+      transition:  0.2s ease-out;
+      margin: 10px 0;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  &.active {
+    .userMenuList {
+      display: inline-block;
+    }
   }
 }

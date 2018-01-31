@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {actions} from './actions';
+import {actions} from '../actions';
 import signInForm from './signInForm';
 
 const signUpForm = () => {
