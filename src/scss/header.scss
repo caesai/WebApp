@@ -1,4 +1,12 @@
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 5;
+  background-color: rgb(230,230,230);
+  border-bottom: 1px solid rgba(0,0,0,0.24);
+
   ul {
 
     display: inline-block;
@@ -12,8 +20,8 @@
   }
 
   .logInBtn {
+    cursor: pointer;
     float: right;
-    padding: 15px 0;
   }
 }
 

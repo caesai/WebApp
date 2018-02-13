@@ -22,6 +22,10 @@ h1 {
   margin: 0 auto;
 }
 
+.pageContent {
+  margin-top: 50px;
+}
+
 @import './header.scss';
 @import './footer.scss';
 @import './popup.scss';

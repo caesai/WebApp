@@ -6,8 +6,13 @@ import App from '../src/App';
 import { Provider } from 'react-redux';
 import configureStore from '../src/store/store';
 import routes from '../src/routes/';
+import webpack from 'webpack';
+import devmiddleware from 'webpack-dev-middleware';
+import hotmiddleware from 'webpack-hot-middleware';
+import clientConfig from '../webpack/client.dev.js';
+import serverConfig from '../webpack/server.dev.js';
 
-const path = require('path');
+var compiler = webpack([clientConfig,serverConfig]);
 
 const PORT = 3000;
 
@@ -21,6 +26,10 @@ express.static.mime.define(
   },
   true
 );
+
+app.use(devmiddleware(compiler, { serverSideRender: true }));
+
+app.use(hotmiddleware(compiler, { serverSideRender: true }));
 
 app.use(express.static('./dist'));
 
