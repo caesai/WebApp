@@ -14,7 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/',
     filename: 'js/[name].bundle.js',
-    chunkFilename: 'js/[name]-[hash].js'
+    chunkFilename: 'js/[name].js'
   },
   resolve: {
     modules: [path.resolve(__dirname,'../node_modules')]
@@ -26,7 +26,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         options: {
-          plugins: ['dynamic-import-webpack']
+          plugins: ['syntax-dynamic-import']
         }
       },
       {

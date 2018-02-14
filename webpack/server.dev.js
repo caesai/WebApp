@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const { ReactLoadablePlugin } = require('react-loadable/webpack');
 
 module.exports = {
   name: 'server',
@@ -21,7 +22,7 @@ module.exports = {
       loader: 'babel-loader',
       exclude: /node_modules/,
       options: {
-        plugins: ['dynamic-import-node']
+        plugins: ['syntax-dynamic-import']
       }
     },
     {
@@ -60,6 +61,9 @@ module.exports = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
+    }),
+    new ReactLoadablePlugin({
+      filename: '../dist/react-loadable.json'
     }),
     new webpack.DefinePlugin({
       'process.env': {

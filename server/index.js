@@ -1,18 +1,13 @@
 import React from 'react';
 import express from 'express';
 import ReactDOMServer from 'react-dom/server';
+import Loadable from 'react-loadable';
 import { StaticRouter, matchPath } from 'react-router-dom';
 import App from '../src/App';
 import { Provider } from 'react-redux';
 import configureStore from '../src/store/store';
 import routes from '../src/routes/';
-import webpack from 'webpack';
-import devmiddleware from 'webpack-dev-middleware';
-import hotmiddleware from 'webpack-hot-middleware';
-import clientConfig from '../webpack/client.dev.js';
-import serverConfig from '../webpack/server.dev.js';
-
-var compiler = webpack([clientConfig,serverConfig]);
+import { getBundles } from 'react-loadable/webpack'
 
 const PORT = 3000;
 
@@ -27,10 +22,6 @@ express.static.mime.define(
   true
 );
 
-app.use(devmiddleware(compiler, { serverSideRender: true }));
-
-app.use(hotmiddleware(compiler, { serverSideRender: true }));
-
 app.use(express.static('./dist'));
 
 app.get('*', (req, res, next) => {
@@ -44,14 +35,17 @@ app.get('*', (req, res, next) => {
   Promise.all(promises)
     .then(() => {
   const preloadedState = store.getState();
+  let modules = [];
   const markup = ReactDOMServer.renderToString(
     <Provider store={store}>
       <StaticRouter context={preloadedState} location={req.url}>
-        <App />
+      <Loadable.Capture report={moduleName => modules.push(moduleName)}>
+        <App/>
+      </Loadable.Capture>
       </StaticRouter>
     </Provider>
   );
-
+  let bundles = getBundles({}, modules);
   res.send(`
     <!DOCTYPE html>
     <html>
@@ -59,15 +53,21 @@ app.get('*', (req, res, next) => {
         <meta charset="utf-8" />
         <title>WebApp - React based web application</title>
         <link rel="stylesheet" href="/css/styles.css">
+        <link rel="preload" as="script" href="/js/manifest.bundle.js">
+        <link rel="preload" as="script" href="/js/vendor.bundle.js">
+        <link rel="preload" as="script" href="/js/main.bundle.js">
+      </head>
+      <body>
+        <div id="root">${markup}</div>
         <script type="text/javascript" src="/js/manifest.bundle.js" defer></script>
         <script type="text/javascript" src="/js/vendor.bundle.js" defer></script>
+        ${bundles.map(bundle => {
+           return `<script src="/dist/${bundle.file}"></script>`
+         }).join('\n')}
         <script type="text/javascript" src="/js/main.bundle.js" defer></script>
         <script>
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
         </script>
-      </head>
-      <body>
-        <div id="root">${markup}</div>
       </body>
     </html>
   `);
