@@ -39,9 +39,9 @@ app.get('*', (req, res, next) => {
   const markup = ReactDOMServer.renderToString(
     <Provider store={store}>
       <StaticRouter context={preloadedState} location={req.url}>
-      <Loadable.Capture report={moduleName => modules.push(moduleName)}>
-        <App/>
-      </Loadable.Capture>
+        <Loadable.Capture report={moduleName => modules.push(moduleName)}>
+          <App/>
+        </Loadable.Capture>
       </StaticRouter>
     </Provider>
   );
@@ -56,6 +56,9 @@ app.get('*', (req, res, next) => {
         <link rel="preload" as="script" href="/js/manifest.bundle.js">
         <link rel="preload" as="script" href="/js/vendor.bundle.js">
         <link rel="preload" as="script" href="/js/main.bundle.js">
+        ${bundles.map(bundle => {
+           return `<link rel="preload" as="script" href="/dist/${bundle.file}"/>`
+         }).join('\n')}
       </head>
       <body>
         <div id="root">${markup}</div>
@@ -75,6 +78,8 @@ app.get('*', (req, res, next) => {
  .catch(next);
 });
 
-app.listen(PORT, () => {
-  console.log(`listening on port: ${PORT}`);
+Loadable.preloadAll().then(() => {
+  app.listen(PORT, () => {
+    console.log(`listening on port: ${PORT}`);
+  });
 });
