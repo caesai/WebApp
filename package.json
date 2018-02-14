@@ -1,6 +1,6 @@
 {
   "name": "WebApp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "repository": {
@@ -10,6 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --progress --config webpack/webpack.config.js",
+    "buildProd": "webpack --progress --config webpack/webpack.prod.config.js",
     "server": "babel-node server.js"
   },
   "author": "Vasily Kharlamov",
@@ -58,6 +59,7 @@
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.19.0",
+    "uglifyjs-webpack-plugin": "^1.1.8",
     "url-loader": "^0.6.2",
     "webpack": "^3.9.0",
     "webpack-dev-middleware": "^2.0.4",

@@ -60,14 +60,11 @@ module.exports = {
     }]
   },
   plugins: [
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1
-    }),
     new ReactLoadablePlugin({
       filename: '../dist/react-loadable.json'
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"development"'
+      'process.env.NODE_ENV': '"production"'
     }),
     new webpack.optimize.ModuleConcatenationPlugin()
   ]

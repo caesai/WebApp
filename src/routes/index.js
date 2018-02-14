@@ -1,6 +1,7 @@
 import React from 'react';
 import Loadable from 'react-loadable';
 import requireAuthentication from '../containers/AuthenticatedComponent'
+import Home from '../views/MainPage';
 
 function Loading(props) {
   if (props.error) {
@@ -15,10 +16,7 @@ function Loading(props) {
 const routes = [
   {
     path: '/',
-    component: Loadable({
-      loader: () => import('../views/MainPage'),
-      loading: Loading
-    }),
+    component: Home,
     exact: true
   },
   {

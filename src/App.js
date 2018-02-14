@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {  withRouter, Route, Switch} from 'react-router-dom';
+import Loadable from 'react-loadable';
 
 import Header from './components/Header';
 import Footer from './components/Footer';
-import PopUp from './components/PopUp';
+// import PopUp from './components/PopUp';
 
 import routes from './routes';
 
@@ -31,6 +32,10 @@ let App = class extends React.Component{
     super(props);
   }
   render() {
+    let PopUp = Loadable({
+      loader: () => import('./components/PopUp'),
+      loading: () => null
+    })
     return (
       <div>
         <Header />
