@@ -1,17 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
-const AutoDllPlugin = require('autodll-webpack-plugin');
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 
 module.exports = {
   name: 'client',
   devtool: 'source-map',
   entry: [
     'babel-polyfill',
-    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=false&quiet=false&noInfo=false',
     path.resolve(__dirname, '../src/index.js')
   ],
   target: 'web',
@@ -19,7 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/',
     filename: 'js/[name].bundle.js',
-    chunkFilename: 'js/[name]-[hash].js'
+    chunkFilename: 'js/[name].js'
   },
   resolve: {
     modules: [path.resolve(__dirname,'../node_modules')]
@@ -31,7 +26,7 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         options: {
-          plugins: ['dynamic-import-webpack']
+          plugins: ['syntax-dynamic-import']
         }
       },
       {
@@ -70,20 +65,6 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('css/styles.css'),
-    // new HtmlWebpackPlugin({
-    //   alwaysWriteToDisk: true,
-    //   title: 'WebApp',
-    //   template: 'template.html',
-    //   files: {
-    //     css: [ 'css/styles.css' ],
-    //     js: [ 'js/main.bundle.js']
-    //   },
-    //   inject: 'body'
-    // }),
-    // new HtmlWebpackHarddiskPlugin({
-    //   outputPath: path.resolve(__dirname, '../dist'),
-    //   inject: 'body'
-    // }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: module => module.context && module.context.indexOf('node_modules') !== -1

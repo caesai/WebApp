@@ -1,23 +1,39 @@
 import React from 'react';
+import Loadable from 'react-loadable';
 import requireAuthentication from '../containers/AuthenticatedComponent'
 
-import MainPage from '../views/MainPage';
-import DashBoard from '../views/DashBoard';
-import Profile from '../views/Profile';
+function Loading(props) {
+  if (props.error) {
+    return <div className='container'>Error!</div>;
+  } else if (props.pastDelay) {
+    return <div className='container'>Loading...</div>;
+  } else {
+    return null;
+  }
+}
 
 const routes = [
   {
     path: '/',
-    component: MainPage,
+    component: Loadable({
+      loader: () => import('../views/MainPage'),
+      loading: Loading
+    }),
     exact: true
   },
   {
     path: '/profile',
-    component: requireAuthentication(Profile)
+    component: requireAuthentication(Loadable({
+      loader: () => import('../views/Profile'),
+      loading: Loading
+    }))
   },
   {
     path: '/dashboard',
-    component: requireAuthentication(DashBoard)
+    component: requireAuthentication(Loadable({
+      loader: () => import('../views/DashBoard'),
+      loading: Loading
+    }))
   }
 ];
 

@@ -23,10 +23,12 @@ let Header = class extends React.Component{
           </ul>
           <div className='logInBtn'>
             {!this.props.isAuthenticated ?
-              <a href='#' onClick={(e)=>{
-                e.preventDefault();
-                this.props.dispatch(actions.openPopUp(signInPopUp));
-              }}>Sign In/Up</a> :
+              <p>
+                <a href='#' onClick={(e)=>{
+                  e.preventDefault();
+                  this.props.dispatch(actions.openPopUp(signInPopUp));
+                }}>Sign In/Up</a>
+              </p> :
               <div className='userMenu' onClick={(e)=>{
                 e.currentTarget.classList.toggle('active');
               }}>

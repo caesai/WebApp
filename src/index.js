@@ -3,6 +3,8 @@ import { hydrate } from 'react-dom';
 import App from './App';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import Loadable from 'react-loadable';
+
 import configureStore from '../src/store/store';
 import './scss/base.scss';
 
@@ -12,11 +14,13 @@ delete window.__PRELOADED_STATE__
 
 let store = configureStore(preloadedState);
 
-hydrate(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById('root')
-)
+Loadable.preloadReady().then(() => {
+  hydrate(
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>,
+    document.getElementById('root')
+  )
+})

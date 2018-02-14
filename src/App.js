@@ -34,7 +34,7 @@ let App = class extends React.Component{
     return (
       <div>
         <Header />
-        <div>
+        <div className='pageContent'>
           <Switch>
             {routes.map((route, i) => <Route key={i} {...route} />)}
           </Switch>
