@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Loadable from 'react-loadable';
 
 import configureStore from '../src/store/store';
-import './scss/base.scss';
+// import './scss/base.scss';
 
 const preloadedState = window.__PRELOADED_STATE__
 

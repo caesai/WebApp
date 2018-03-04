@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   name: 'client',
@@ -13,11 +13,14 @@ module.exports = {
     filename: 'js/[name].bundle.js',
     chunkFilename: 'js/[name].js'
   },
+  node: {
+    fs: 'empty'
+  },
   resolve: {
     modules: [path.resolve(__dirname,'../node_modules')]
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
@@ -36,13 +39,13 @@ module.exports = {
           }
         }
       },
-      {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader?minimize=true', 'sass-loader']
-        })
-      },
+      // {
+      //   test: /\.scss$/,
+      //   use: ExtractTextPlugin.extract({
+      //     fallback: 'style-loader',
+      //     use: ['css-loader?minimize=true', 'sass-loader']
+      //   })
+      // },
       {
           test: /\.(png|jpeg|jpg|gif)$/,
           use: [
@@ -57,19 +60,15 @@ module.exports = {
       {
         test: /\.(otf|eot|svg|ttf|woff|woff2)$/,
         use: ['url-loader?limit=100&name=fonts/[name].[ext]']
+      },
+      {
+        test: /\.wasm$/,
+        use: ['wasm-loader']
       }
     ]
   },
   plugins: [
-    new ExtractTextPlugin('css/styles.css'),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: module => module.context && module.context.indexOf('node_modules') !== -1
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-      minChunks: Infinity
-    }),
+    // new ExtractTextPlugin('css/styles.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"development"'
     }),

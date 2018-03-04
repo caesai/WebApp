@@ -7,7 +7,11 @@ import App from '../src/App';
 import { Provider } from 'react-redux';
 import configureStore from '../src/store/store';
 import routes from '../src/routes/';
-import { getBundles } from 'react-loadable/webpack'
+import { getBundles } from 'react-loadable/webpack';
+
+const fs = require('fs');
+
+
 
 const PORT = 3000;
 
@@ -23,6 +27,7 @@ express.static.mime.define(
 );
 
 app.use(express.static('./dist'));
+app.use(express.static('./wasm'));
 
 app.get('*', (req, res, next) => {
   const store = configureStore({});
@@ -32,6 +37,7 @@ app.get('*', (req, res, next) => {
     }
     return acc;
   }, []);
+
   Promise.all(promises)
     .then(() => {
   const preloadedState = store.getState();
@@ -53,8 +59,6 @@ app.get('*', (req, res, next) => {
         <meta charset="utf-8" />
         <title>WebApp - React based web application</title>
         <link rel="stylesheet" href="/css/styles.css">
-        <link rel="preload" as="script" href="/js/manifest.bundle.js">
-        <link rel="preload" as="script" href="/js/vendor.bundle.js">
         <link rel="preload" as="script" href="/js/main.bundle.js">
         ${bundles.map(bundle => {
            return `<link rel="preload" as="script" href="/dist/${bundle.file}"/>`
@@ -62,8 +66,6 @@ app.get('*', (req, res, next) => {
       </head>
       <body>
         <div id="root">${markup}</div>
-        <script type="text/javascript" src="/js/manifest.bundle.js" defer></script>
-        <script type="text/javascript" src="/js/vendor.bundle.js" defer></script>
         ${bundles.map(bundle => {
            return `<script src="/dist/${bundle.file}"></script>`
          }).join('\n')}
@@ -75,6 +77,7 @@ app.get('*', (req, res, next) => {
     </html>
   `);
 })
+
  .catch(next);
 });
 

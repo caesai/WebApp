@@ -13,12 +13,15 @@ module.exports = {
     filename: 'server.js',
     libraryTarget: 'commonjs2'
   },
+  node: {
+    fs: 'empty'
+  },
   resolve: {
     modules: [path.resolve(__dirname,'../node_modules')]
   },
   externals: ['express'],
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
       loader: 'babel-loader',
       exclude: /node_modules/,
