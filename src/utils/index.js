@@ -12,9 +12,9 @@ const signUpForm = () => {
       <p>Enter your login</p>
       <input type='text' />
       <p>Enter your email</p>
-      <input type='text' />
+      <input name='login' type='text' />
       <p>Enter password</p>
-      <input type='password'/>
+      <input name='password' type='password'/>
       <p>Confirm your password</p>
       <input type='password'/>
       <button type='submit'>Submit</button>
@@ -80,6 +80,14 @@ export const signInPopUp = {
   body: signInForm,
   err: ''
 }
+
+export const geoClient = import('../wasm/geoclient.js')
+.then(client => {
+  return client.default;
+})
+.then(api => {
+  return api
+});
 
 export const signUpPopUp = {
   btns: signInUpBtns,

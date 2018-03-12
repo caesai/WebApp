@@ -1,12 +1,12 @@
 import React from 'react';
 import { hydrate } from 'react-dom';
-import App from './App';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import Loadable from 'react-loadable';
+import App from './App';
 
 import configureStore from '../src/store/store';
-// import './scss/base.scss';
+import './scss/base.scss';
 
 const preloadedState = window.__PRELOADED_STATE__
 

@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const { ReactLoadablePlugin } = require('react-loadable/webpack');
+// const { ReactLoadablePlugin } = require('react-loadable/webpack');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   name: 'server',
@@ -19,7 +20,7 @@ module.exports = {
   resolve: {
     modules: [path.resolve(__dirname,'../node_modules')]
   },
-  externals: ['express'],
+  externals: ['express', nodeExternals()],
   module: {
     rules: [{
       test: /\.js$/,
@@ -66,9 +67,9 @@ module.exports = {
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
-    new ReactLoadablePlugin({
-      filename: '../dist/react-loadable.json'
-    }),
+    // new ReactLoadablePlugin({
+    //   filename: '../dist/react-loadable.json'
+    // }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"development"'
     }),

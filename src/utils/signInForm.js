@@ -3,37 +3,23 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 
 import {actions} from '../actions';
+import {geoClient} from '../utils';
 
 class signInForm extends React.Component {
   render(){
     return (
       <form onSubmit={(e)=>{
         e.preventDefault();
-        let input = e.target.querySelector('input');
-        // Fake authentication
-        if (input.value !== 'admin') {
-          this.props.dispatch(actions.throwPopUpError('Invalid login or password'));
-        } else {
-          this.props.dispatch(actions.login({
-            name: input.value
-          }));
-          setTimeout(()=>{
-            if (this.props.isAuthenticating) {
-              this.props.dispatch(actions.auth({
-                name: 'admin',
-                isAuthenticated: true,
-                token: 'serverToken'
-              }));
-            }
-            this.props.dispatch(actions.closePopUp());
-          }, 1000);
-        }
-        // Fake authentication
+        let login = e.target.querySelector('[name="login"]').value.toString();
+        let password = e.target.querySelector('[name="password"]').value.toString();
+        geoClient.then(api => {
+          console.log(api.signup(login, password))
+        })
       }}>
         <p>Enter your login or email</p>
-        <input type='text' />
+        <input name='login' type='text' />
         <p>Enter password</p>
-        <input type='password' />
+        <input name='password' type='password' />
         <button type='submit'>Submit</button>
         <p className='errormsg'>{this.props.err ? this.props.err : null}</p>
         <p>Or use your FaceBook account to authorize</p>

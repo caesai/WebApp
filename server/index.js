@@ -9,10 +9,6 @@ import configureStore from '../src/store/store';
 import routes from '../src/routes/';
 import { getBundles } from 'react-loadable/webpack';
 
-const fs = require('fs');
-
-
-
 const PORT = 3000;
 
 const app = express();

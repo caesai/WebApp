@@ -472,7 +472,7 @@ Module.STDWEB_PRIVATE.acquire_tmp = function( dummy ) {
 }
 ;
         __imports.env.__web_on_grow();
-        
+
     }
 
     if( __load_asynchronously ) {
@@ -497,7 +497,7 @@ Module.STDWEB_PRIVATE.acquire_tmp = function( dummy ) {
     if( typeof window === "undefined" ) {
         const fs = require( "fs" );
         const path = require( "path" );
-        const wasm_path = path.join( __dirname, "geoclient.wasm" );
+        const wasm_path = "./wasm/geoclient.wasm";
         const buffer = fs.readFileSync( wasm_path );
         const mod = new WebAssembly.Module( buffer );
 

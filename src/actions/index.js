@@ -1,4 +1,7 @@
 export const actions = {
+  signUp: () => ({
+    type: 'SIGN_UP'
+  }),
   openPopUp: (payload) => ({
     type: 'OPEN_POPUP',
     payload

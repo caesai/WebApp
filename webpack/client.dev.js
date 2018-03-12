@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-// const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   name: 'client',
@@ -14,7 +14,8 @@ module.exports = {
     chunkFilename: 'js/[name].js'
   },
   node: {
-    fs: 'empty'
+    fs: 'empty',
+    module: 'empty'
   },
   resolve: {
     modules: [path.resolve(__dirname,'../node_modules')]
@@ -39,13 +40,13 @@ module.exports = {
           }
         }
       },
-      // {
-      //   test: /\.scss$/,
-      //   use: ExtractTextPlugin.extract({
-      //     fallback: 'style-loader',
-      //     use: ['css-loader?minimize=true', 'sass-loader']
-      //   })
-      // },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader?minimize=true', 'sass-loader']
+        })
+      },
       {
           test: /\.(png|jpeg|jpg|gif)$/,
           use: [
@@ -68,7 +69,7 @@ module.exports = {
     ]
   },
   plugins: [
-    // new ExtractTextPlugin('css/styles.css'),
+    new ExtractTextPlugin('css/styles.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"development"'
     }),
