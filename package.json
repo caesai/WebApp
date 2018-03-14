@@ -10,7 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --config webpack/webpack.config.js --mode development --progress --watch",
-    "build": "webpack --progress --config webpack/webpack.config.js --mode development",
+    "buildDev": "webpack --progress --config webpack/webpack.config.js --mode development",
+    "buildProd": "webpack --progress --config webpack/webpack.prod.config.js --mode production",
     "server": "babel-node server.js"
   },
   "author": "Vasily Kharlamov",
@@ -19,6 +20,7 @@
     "base-64": "^0.1.0",
     "bundle-loader": "^0.5.5",
     "express": "^4.16.2",
+    "express-force-ssl": "^0.3.2",
     "history": "^4.7.2",
     "node-localstorage": "^1.3.0",
     "react": "^16.2.0",

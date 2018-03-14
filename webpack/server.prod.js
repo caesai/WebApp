@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const { ReactLoadablePlugin } = require('react-loadable/webpack');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   name: 'server',
@@ -13,12 +13,15 @@ module.exports = {
     filename: 'server.js',
     libraryTarget: 'commonjs2'
   },
+  node: {
+    fs: 'empty'
+  },
   resolve: {
     modules: [path.resolve(__dirname,'../node_modules')]
   },
-  externals: ['express'],
+  externals: ['express', nodeExternals()],
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
       loader: 'babel-loader',
       exclude: /node_modules/,
@@ -60,8 +63,8 @@ module.exports = {
     }]
   },
   plugins: [
-    new ReactLoadablePlugin({
-      filename: '../dist/react-loadable.json'
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'

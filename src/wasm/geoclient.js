@@ -497,7 +497,12 @@ Module.STDWEB_PRIVATE.acquire_tmp = function( dummy ) {
     if( typeof window === "undefined" ) {
         const fs = require( "fs" );
         const path = require( "path" );
-        const wasm_path = "./wasm/geoclient.wasm";
+        let wasm_path;
+        if (process.env.NODE_ENV == 'production') {
+          wasm_path = path.resolve(__dirname, '/home/sushka/webapp/src/wasm/geoclient.wasm');
+        } else {
+          wasm_path = "./wasm/geoclient.wasm";
+        }
         const buffer = fs.readFileSync( wasm_path );
         const mod = new WebAssembly.Module( buffer );
 
