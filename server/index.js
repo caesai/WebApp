@@ -15,6 +15,7 @@ const fs = require('fs');
 const https = require('https');
 const http = require('http');
 const forceSsl = require('express-force-ssl');
+const cors = require('cors');
 
 const PORT = process.env.NODE_ENV == 'production' ? 80 : 3000;
 
@@ -35,7 +36,8 @@ if (process.env.NODE_ENV == 'production') {
 
   app.use(express.static(path.resolve(__dirname, '/home/sushka/webapp/dist')));
   app.use(express.static(path.resolve(__dirname, '/home/sushka/webapp/wasm')));
-  app.use(forceSsl);
+  // app.use(forceSsl);
+  app.use(cors());
 
   http.createServer(app).listen(PORT,()=>{
     console.log(`listening on ${PORT}`)
@@ -51,6 +53,7 @@ if (process.env.NODE_ENV == 'production') {
 } else {
   app.use(express.static('./dist'));
   app.use(express.static('./wasm'));
+  app.use(cors());
 }
 
 app.get('*', (req, res, next) => {

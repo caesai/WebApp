@@ -11,6 +11,7 @@ Working example is running on http://arbooze.ru
 1. /src - frontend sources (Web Application Code)
 2. /webpack - config folder for webpack
 3. /server - config folder for server side on express.js
+4. /wasm - wasm-module folder
 
 # Development setup
 To set up application and run it locally:
@@ -21,7 +22,7 @@ npm install
 ```
 2. compile web app
 ```
-npm run build
+npm run buildDev
 ```
 These commands will run webpack to build source code. After build complete run:
 

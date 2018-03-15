@@ -19,6 +19,7 @@
   "dependencies": {
     "base-64": "^0.1.0",
     "bundle-loader": "^0.5.5",
+    "cors": "^2.8.4",
     "express": "^4.16.2",
     "express-force-ssl": "^0.3.2",
     "history": "^4.7.2",

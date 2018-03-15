@@ -13,7 +13,20 @@ class signInForm extends React.Component {
         let login = e.target.querySelector('[name="login"]').value.toString();
         let password = e.target.querySelector('[name="password"]').value.toString();
         geoClient.then(api => {
-          console.log(api.signup(login, password))
+          const signup_request = api.signup(login, password);
+          console.log(JSON.parse(signup_request));
+          const signup_url = 'http://188.226.153.11:4000/users/signin';
+
+          fetch(signup_url, {
+            method: 'POST',
+            body: JSON.parse(signup_request),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+          }).then((response => {
+            console.log(response)
+          }));
         })
       }}>
         <p>Enter your login or email</p>
