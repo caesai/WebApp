@@ -12,21 +12,6 @@ const mapStateToProps = (state) => ({
   popUpOpened: state.popups.popUpOpened,
   wasm: state.wasm
 });
-/*
-let history = createHistory();
-*/
-/*
-let store = configureStore({});
-let token = localStorage.getItem('token');
-
-if (token !== null) {
-  store.dispatch(actions.auth({
-    name: 'admin',
-    isAuthenticated: true,
-    token: token
-  }));
-}
-*/
 
 let App = class extends React.Component{
   constructor(props) {

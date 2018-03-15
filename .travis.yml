@@ -12,4 +12,5 @@ addons:
 script:
   - nvm install 8
   - npm install
-  - npm run build
+  - npm run buildDev
+  - npm run server
