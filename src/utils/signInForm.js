@@ -51,13 +51,11 @@ class signInForm extends React.Component {
               return response
           })
           .then(parseJSON)
-          .then(function(token) {
-            console.log('request succeeded with JSON response', token)            
-            //Parse data for json web token and get the decoded payload ignoring signature, no secretOrPrivateKey needed
-            console.log(jwt.decode(token, { complete: true, json: true }))
-            var decoded = jwt.decode(token);
-            var is_admin = decoded.admin;
-            var username = decoded.username;
+          .then(function(data) {
+            console.log('request succeeded with JSON response', data);           
+            var is_admin = data.admin;
+            var username = data.username;
+            var token = data.token;
           }).catch(function(error) {
             console.log('request failed', error)
           });
