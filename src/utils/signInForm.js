@@ -5,6 +5,22 @@ import {withRouter} from 'react-router-dom';
 import {actions} from '../actions';
 import {geoClient} from '../utils';
 
+var jwt = require('jsonwebtoken');
+
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+      return response
+  } else {
+      var error = new Error(response.statusText)
+      error.response = response
+      throw error
+  }
+}
+
+function parseJSON(response) {
+  return response.json()
+}
+
 class signInForm extends React.Component {
   render(){
     return (
@@ -13,20 +29,38 @@ class signInForm extends React.Component {
         let login = e.target.querySelector('[name="login"]').value.toString();
         let password = e.target.querySelector('[name="password"]').value.toString();
         geoClient.then(api => {
-          const signup_request = api.signup(login, password);
-          console.log(JSON.parse(signup_request));
-          const signup_url = 'http://188.226.153.11:4000/users/signin';
+          const signin_request = api.signup(login, password);
+          console.log(JSON.parse(signin_request));
+          //const signin_url = 'http://188.226.153.11:4000/users/signin';
+          const signin_url = 'http://127.0.0.1:4000/users/signin';
 
-          fetch(signup_url, {
+          fetch(signin_url, {
             method: 'POST',
-            body: JSON.parse(signup_request),
+            body: signin_request,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-          }).then((response => {
-            console.log(response)
-          }));
+          })
+          .then(checkStatus)
+          .then(function(response) {
+              console.log("Content-Type" + response.headers.get('Content-Type'))
+              console.log("Date" + response.headers.get('Date'))
+              console.log("Status" + response.status)
+              console.log("Status text" + response.statusText)
+              return response
+          })
+          .then(parseJSON)
+          .then(function(token) {
+            console.log('request succeeded with JSON response', token)            
+            //Parse data for json web token and get the decoded payload ignoring signature, no secretOrPrivateKey needed
+            console.log(jwt.decode(token, { complete: true, json: true }))
+            var decoded = jwt.decode(token);
+            var is_admin = decoded.admin;
+            var username = decoded.username;
+          }).catch(function(error) {
+            console.log('request failed', error)
+          });
         })
       }}>
         <p>Enter your login or email</p>
