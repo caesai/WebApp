@@ -3,23 +3,10 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 
 import {actions} from '../actions';
-import {geoClient} from '../utils';
+import {signinUrl} from '../constants';
+import {geoClient, checkStatus, parseJSON} from '../utils';
 
 var jwt = require('jsonwebtoken');
-
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-      return response
-  } else {
-      var error = new Error(response.statusText)
-      error.response = response
-      throw error
-  }
-}
-
-function parseJSON(response) {
-  return response.json()
-}
 
 class signInForm extends React.Component {
   render(){
@@ -30,11 +17,8 @@ class signInForm extends React.Component {
         let password = e.target.querySelector('[name="password"]').value.toString();
         geoClient.then(api => {
           const signin_request = api.signup(login, password);
-          console.log(JSON.parse(signin_request));
-          //const signin_url = 'http://188.226.153.11:4000/users/signin';
-          const signin_url = 'http://127.0.0.1:4000/users/signin';
 
-          fetch(signin_url, {
+          fetch(signinUrl, {
             method: 'POST',
             body: signin_request,
             headers: {
@@ -51,11 +35,10 @@ class signInForm extends React.Component {
               return response
           })
           .then(parseJSON)
-          .then(function(data) {
-            console.log('request succeeded with JSON response', data);           
-            var is_admin = data.admin;
-            var username = data.username;
-            var token = data.token;
+          .then((data) => {
+            console.log('request succeeded with JSON response', data);
+            this.props.dispatch(actions.auth(data));
+            this.props.dispatch(actions.closePopUp());
           }).catch(function(error) {
             console.log('request failed', error)
           });

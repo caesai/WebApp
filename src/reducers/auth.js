@@ -2,6 +2,7 @@ const initialState = {
   isAuthenticating: false,
   isAuthenticated: false,
   token: '',
+  isadmin: false,
   name: '',
   redirectingTo: ''
 };
@@ -15,11 +16,12 @@ export default function user (state = initialState, action) {
         redirectingTo: action.payload.nextUrl
       });
     case 'LOGIN_SUCCESS':
-    localStorage.setItem('token', action.payload.token);
+    localStorage.setItem('geoglobula.auth.token', JSON.stringify(action.payload));
       return Object.assign({}, state, {
         isAuthenticating: false,
-        name: action.payload.name,
-        isAuthenticated: action.payload.isAuthenticated,
+        isadmin: action.payload.admin,
+        name: action.payload.username,
+        isAuthenticated: true,
         token: action.payload.token
       });
     case 'CHECK_TOKEN':
@@ -27,7 +29,7 @@ export default function user (state = initialState, action) {
         isAuthenticating: true
       });
     case 'LOGOUT':
-    localStorage.removeItem('token');
+    localStorage.removeItem('geoglobula.auth.token');
       return initialState;
     default:
       return state;
