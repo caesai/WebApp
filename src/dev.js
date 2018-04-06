@@ -15,7 +15,7 @@ delete window.__PRELOADED_STATE__
 let store = configureStore(preloadedState);
 
   Loadable.preloadReady().then(() => {
-    hydrate(
+    render(
       <Provider store={store}>
         <BrowserRouter>
           <App />
