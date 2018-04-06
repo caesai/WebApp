@@ -1,9 +1,9 @@
-# Web Application
+# NuLand - Embedding reality into cyberspace
 
 ### TravisCI
 [![Build Status](https://travis-ci.org/caesai/WebApp.svg?branch=master)](https://github.com/caesai/WebApp/)
 
-WebApp is a JavaScript application written with React framework.
+NuLand is a JavaScript application written with React framework.
 
 Working example is running on http://194.58.122.82/
 
@@ -34,7 +34,7 @@ This will launch development server on http://localhost:8080
 To use server side rendering and to test node server running
 
 ```
-npm run devServer
+npm run server
 ```
 
 Server will be running on http://localhost:3000
