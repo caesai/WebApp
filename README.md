@@ -27,6 +27,14 @@ npm run buildDev
 These commands will run webpack to build source code. After build complete run:
 
 ```
-npm run server
+npm run devServer
 ```
-This will launch server on http://localhost:3000
+This will launch development server on http://localhost:8080
+
+To use server side rendering and to test node server running
+
+```
+npm run devServer
+```
+
+Server will be running on http://localhost:3000

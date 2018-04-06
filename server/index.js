@@ -84,7 +84,8 @@ app.get('*', (req, res, next) => {
     <html>
       <head>
         <meta charset="utf-8" />
-        <title>WebApp - React based web application</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>NuLand - Embedding reality into cyberspace</title>
         <link rel="stylesheet" href="/css/styles.css">
         <link rel="preload" as="script" href="/js/main.bundle.js">
         ${bundles.map(bundle => {
