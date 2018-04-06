@@ -34,7 +34,7 @@ This will launch development server on http://localhost:8080
 To use server side rendering and to test node server running
 
 ```
-npm run devServer
+npm run server
 ```
 
 Server will be running on http://localhost:3000
