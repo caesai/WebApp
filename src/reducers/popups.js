@@ -2,7 +2,7 @@ const reducerState = {
   loggedIn: false,
   popUpOpened: false,
   popUpBody: {
-    title: '',
+    title: null,
     body: ''
   },
   err: ''

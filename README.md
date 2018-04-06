@@ -5,7 +5,7 @@
 
 WebApp is a JavaScript application written with React framework.
 
-Working example is running on http://arbooze.ru
+Working example is running on http://194.58.122.82/
 
 # Repository structure
 1. /src - frontend sources (Web Application Code)

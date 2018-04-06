@@ -1,5 +1,5 @@
 import React from 'react';
-import { hydrate } from 'react-dom';
+import { hydrate, render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import Loadable from 'react-loadable';
@@ -14,13 +14,14 @@ delete window.__PRELOADED_STATE__
 
 let store = configureStore(preloadedState);
 
-Loadable.preloadReady().then(() => {
-  hydrate(
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>,
-    document.getElementById('root')
-  )
-})
+
+  Loadable.preloadReady().then(() => {
+    hydrate(
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>,
+      document.getElementById('root')
+    )
+  })

@@ -1,4 +1,4 @@
-// @import './fonts.scss';
+@import './fonts.scss';
 
 * {
   box-sizing: border-box;
@@ -10,6 +10,8 @@ body {
 }
 
 h1 {
+  color: #0073b2;
+
   span {
     font-size: 9px;
   }
@@ -24,6 +26,33 @@ h1 {
 
 .pageContent {
   margin-top: 50px;
+}
+
+.welcomeScreen {
+  text-align: center;
+  position: fixed;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: table;
+  width: 100%;
+
+  button {
+    background-color: transparent;
+    border: 0;
+    font-size: 18px;
+    transition: 0.2s ease-out 0.1s;
+    cursor: pointer;
+    opacity: 0.7;
+    color: #007fb0;
+    outline: none;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
 
 @import './header.scss';

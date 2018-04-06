@@ -9,7 +9,7 @@ module.exports = {
   target: 'web',
   output: {
     path: path.resolve(__dirname, '../dist'),
-    publicPath: '/',
+    publicPath: 'http://194.58.122.82:80/',
     filename: 'js/[name].bundle.js',
     chunkFilename: 'js/[name].js'
   },
@@ -75,10 +75,5 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.ModuleConcatenationPlugin()
-  ],
-  devServer: {
-    historyApiFallback: true,
-    publicPath: 'http://localhost:8080/dist/',
-    contentBase: './dist/'
-  }
+  ]
 };

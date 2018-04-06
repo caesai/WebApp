@@ -17,17 +17,17 @@ let Header = class extends React.Component{
     return (
       <div className='header'>
         <div className='container'>
-          <ul>
+          {/*<ul>
             <li><Link to='/'>Main Page</Link></li>
             <MainMenu />
-          </ul>
+          </ul>*/}
           <div className='logInBtn'>
             {!this.props.isAuthenticated ?
               <p>
                 <a href='#' onClick={(e)=>{
                   e.preventDefault();
                   this.props.dispatch(actions.openPopUp(signInPopUp));
-                }}>Sign In/Up</a>
+                }}>Sign In</a>
               </p> :
               <div className='userMenu' onClick={(e)=>{
                 e.currentTarget.classList.toggle('active');

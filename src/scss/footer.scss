@@ -1,6 +1,7 @@
 .footer {
-  background-color: rgba(0,0,0,0.1);
-  border-top: 1px solid rgba(0,0,0,0.24);
+  position: fixed;
+  bottom: 0;
+  left: 50px;
   margin-top: 50px;
   padding-top: 15px;
 }

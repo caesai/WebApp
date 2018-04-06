@@ -4,8 +4,6 @@
   left: 0;
   width: 100%;
   z-index: 5;
-  background-color: rgb(230,230,230);
-  border-bottom: 1px solid rgba(0,0,0,0.24);
 
   ul {
 
@@ -22,6 +20,16 @@
   .logInBtn {
     cursor: pointer;
     float: right;
+
+    a {
+      color: #000;
+      transition: 0.2s ease-out 0.1s;
+      opacity: 0.6;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 }
 

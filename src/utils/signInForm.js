@@ -44,13 +44,10 @@ class signInForm extends React.Component {
           });
         })
       }}>
-        <p>Enter your login or email</p>
-        <input name='login' type='text' />
-        <p>Enter password</p>
-        <input name='password' type='password' />
+        <input name='login' type='text' placeholder='Enter login'/>
+        <input name='password' type='password' placeholder='Enter password' />
         <button type='submit'>Submit</button>
-        <p className='errormsg'>{this.props.err ? this.props.err : null}</p>
-        <p>Or use your FaceBook account to authorize</p>
+        {this.props.err ? <p className='errormsg'>{this.props.err}</p>: null}
       </form>
     )
   }

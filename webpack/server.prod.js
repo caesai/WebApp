@@ -9,7 +9,7 @@ module.exports = {
   target: 'node',
   output: {
     path: path.resolve(__dirname,'../'),
-    publicPath: '/dist/',
+    publicPath: 'http://194.58.122.82:80/',
     filename: 'server.js',
     libraryTarget: 'commonjs2'
   },

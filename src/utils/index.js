@@ -34,7 +34,7 @@ let signInUpBtns = (props) => {
       }
     }}>
       <h3 className='active'>Sign In</h3>
-      <h3>Sign Up</h3>
+      {/*<h3>Sign Up</h3>*/}
     </div>
   )
 }
@@ -54,9 +54,8 @@ let newsLetter = (props) => {
         props.dispatch(actions.throwPopUpError('Invalid email address'));
       }
     }}>
-      <p>Enter your email to subscribe</p>
-      <input type='text' />
-      <p className='errormsg'>{props.err ? props.err : null}</p>
+      <input type='text' placeholder='Enter your email'/>
+      {props.err ? <p className='errormsg'> {props.err} </p> : null}
       <button type='submit'>Submit</button>
     </form>
   )

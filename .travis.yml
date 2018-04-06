@@ -13,4 +13,3 @@ script:
   - nvm install 8
   - npm install
   - npm run buildDev
-  - npm run buildProd

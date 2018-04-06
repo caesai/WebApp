@@ -27,7 +27,7 @@ let PopUp = class extends React.Component{
             x
           </div>
           <div className='popUpHead'>
-            <h3>{this.props.popUpBody.title && this.props.popUpBody.title}</h3>
+            {this.props.popUpBody.title && <h3>{this.props.popUpBody.title}</h3>}
             {this.props.popUpBody.btns ? <this.props.popUpBody.btns /> : null}
           </div>
           <div className='popUpBody'>
