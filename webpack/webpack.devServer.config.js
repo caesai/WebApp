@@ -15,7 +15,8 @@ module.exports = {
   },
   node: {
     fs: 'empty',
-    module: 'empty'
+    module: 'empty',
+    crypto: true
   },
   resolve: {
     modules: [path.resolve(__dirname,'../node_modules')]
