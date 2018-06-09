@@ -3,19 +3,18 @@ import _ from 'lodash';
 import { connect } from 'react-redux';
 import {actions} from '../actions';
 
-var randomBytes = require('random-bytes');
 const crypto = require('crypto');
 const secp256k1 = require('secp256k1');
+
 const bip39 = require('bip39');
 const bitcoin = require('bitcoinjs-lib');
 const ethUtils = require('ethereumjs-util');
-// const constants = require('bip44-constants')
-
 
 class Key extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      username: props.username,
       key: '',
       private: null,
       public: null,
@@ -35,6 +34,7 @@ class Key extends React.Component {
     )
   }
   componentDidMount() {
+    console.log(this.props)
     this.generatePrivateKey().then( key => {
       const pubKey = secp256k1.publicKeyCreate(key)
       this.setState({
@@ -43,7 +43,10 @@ class Key extends React.Component {
         public: pubKey.toString('hex')
       });
       this.props.dispatch(actions.userAuth({
-        uid: pubKey.toString('hex')
+        name: this.state.username,
+        uid: pubKey.toString('hex'),
+        key: key.toString('hex'),
+        keyBuf: key
       }))
     })
   }
@@ -62,6 +65,7 @@ class Key extends React.Component {
             return <span key={key}>{word} </span>
           })}</div>
         </div>
+
         <button onClick={()=>{
           let mnemonic = bip39.entropyToMnemonic(this.state.key).split(' ');
           let phrase = _.join(mnemonic, ' ');
@@ -88,13 +92,15 @@ class Key extends React.Component {
             wif: key0.toWIF()
           })
         }}>Create wallet</button>
+
+
+
       </div>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  username: state.user.name,
   uid: state.user.uid
 });
 

@@ -112,3 +112,11 @@ export function checkStatus(response) {
 export function parseJSON(response) {
   return response.json()
 }
+
+export function toByteArray(hex) {
+  const typedArray = new Uint8Array(hex.match(/[\da-f]{2}/gi).map(function (h) {
+    return parseInt(h, 16)
+  }))
+
+  return new Buffer(typedArray.buffer)
+}
