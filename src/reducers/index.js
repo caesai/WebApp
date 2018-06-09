@@ -1,5 +1,5 @@
 import popups from './popups';
-import user from './auth';
+import user from './user';
 import wasm from './wasm';
 import { routerReducer } from 'react-router-redux';
 import { combineReducers } from 'redux';

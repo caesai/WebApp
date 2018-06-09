@@ -17,13 +17,13 @@ const mapStateToProps = (state) => ({
   wasm: state.wasm
 });
 
-let App = class extends React.Component{
+class App extends React.Component{
   constructor(props) {
     super(props);
   }
   componentDidMount() {
     let loacalData = JSON.parse(localStorage.getItem('geoglobula.auth.token'));
-    
+
     if (loacalData !== null) {
       fetch(apiUrl, {
         method: 'post',

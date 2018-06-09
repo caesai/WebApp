@@ -1,7 +1,11 @@
 import React from 'react';
 import _ from 'lodash';
+import { connect } from 'react-redux';
+import {actions} from '../actions';
 
-var randomBytes = require('random-bytes')
+var randomBytes = require('random-bytes');
+const crypto = require('crypto');
+const secp256k1 = require('secp256k1');
 const bip39 = require('bip39');
 const bitcoin = require('bitcoinjs-lib');
 const ethUtils = require('ethereumjs-util');
@@ -20,18 +24,28 @@ class Key extends React.Component {
       mnemonic: null
     }
   }
-
+  generatePrivateKey(){
+    return new Promise ((resolve, reject) => {
+        crypto.randomBytes(32, (err, buf) => {
+          if (err) reject(err);
+          console.log(`${buf.length} bytes of random data: ${buf.toString('hex')}`);
+          resolve(buf);
+        });
+      }
+    )
+  }
   componentDidMount() {
-    randomBytes(32)
-        .then((key) => {
-          this.setState({
-            key: key,
-            private: key.toString('hex')
-          })
-          return key;
-        })
-        .catch(err => console.log(err));
-
+    this.generatePrivateKey().then( key => {
+      const pubKey = secp256k1.publicKeyCreate(key)
+      this.setState({
+        key: key,
+        private: key.toString('hex'),
+        public: pubKey.toString('hex')
+      });
+      this.props.dispatch(actions.userAuth({
+        uid: pubKey.toString('hex')
+      }))
+    })
   }
   render() {
     return(
@@ -40,7 +54,7 @@ class Key extends React.Component {
           textAlign: 'left'
         }}>
           <div><b>Private key:</b> {this.state.private && this.state.private}</div>
-          <div><b>xPub:</b> {this.state.public && this.state.public}</div>
+          <div><b>Public key:</b> {this.state.public && this.state.public}</div>
           <div><b>WIF:</b> {this.state.wif && this.state.wif}</div>
           <div><b>BTC Address:</b> {this.state.address && this.state.address}</div>
           <div><b>ETH Address:</b> {this.state.ethAddress && this.state.ethAddress}</div>
@@ -64,12 +78,11 @@ class Key extends React.Component {
           let address0FromXpubKey = bitcoin.HDNode.fromBase58(xpubString);
 
           var ethAddress = ethUtils.privateToAddress(this.state.key).toString('hex');
-          
+
           console.log(address0 === address0FromXpub)
 
           this.setState({
             mnemonic: mnemonic,
-            public: xpubString,
             address: address0,
             ethAddress: `0x${ethAddress.toUpperCase()}`,
             wif: key0.toWIF()
@@ -80,4 +93,9 @@ class Key extends React.Component {
   }
 }
 
-export default Key
+const mapStateToProps = (state) => ({
+  username: state.user.name,
+  uid: state.user.uid
+});
+
+export default connect(mapStateToProps)(Key)

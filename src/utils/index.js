@@ -80,13 +80,13 @@ export const signInPopUp = {
   err: ''
 }
 
-export const geoClient = import('../wasm/geoclient.js')
-.then(client => {
-  return client.default;
-})
-.then(api => {
-  return api
-});
+// export const geoClient = import('../wasm/geoclient.js')
+// .then(client => {
+//   return client.default;
+// })
+// .then(api => {
+//   return api
+// });
 
 export const signUpPopUp = {
   btns: signInUpBtns,

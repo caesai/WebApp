@@ -1,4 +1,8 @@
 export const actions = {
+  userAuth: (payload) => ({
+    type: 'USER_AUTH',
+    payload
+  }),
   signUp: () => ({
     type: 'SIGN_UP'
   }),

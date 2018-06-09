@@ -5,8 +5,10 @@ import {signInPopUp, newsLetterPopUp} from 'utils/';
 import {actions} from '../../actions';
 
 import Key from '../../components/Key';
+import ChatBox from '../../components/Chat/ChatBox';
 
 const mapStateToProps = (state) => ({
+  uid: state.user.uid,
   popUpOpened: state.popups.popUpOpened,
   location: state.routing
 });
@@ -17,6 +19,7 @@ class TopBlock extends React.Component {
       <div className='welcomeScreen'>
         <h1>NuLand</h1>
         <Key />
+        {this.props.uid ? <ChatBox /> : null}
         <img src={require('img/logo.png')} alt='' />
         <p>
           <button onClick={()=>{
