@@ -30,6 +30,13 @@ class ChatBox extends React.Component {
     this.socket = socketIOClient(socketUrl, {
       query : 'username='+this.state.username+'&uid='+this.state.uid
     });
+
+    this.socket.on('message', (message) => {
+      this.setState({
+        messages : this.state.messages.concat(message)
+      });
+      console.log(message)
+    })
   }
   sendMessage(message, e){
     console.log(message);

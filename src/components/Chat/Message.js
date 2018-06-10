@@ -1,20 +1,20 @@
 import React from 'react';
 
-const Message = (props) => {
+const Message = ({message}) => {
   return (
     <div className="message">
       <div className="username">
-        <b>{props.message.username}</b> :
+        <b>{message.username}</b> :
       </div>
 
       <div className="data">
-        {props.message.message.type === 'message' ? (
+        {message.message.type === 'message' ? (
           <div className="text">
-              {props.message.message.text}
+              <p>{message.message.text}</p>
           </div>
         ) : (
           <div className="image">
-              <img src={props.message.message.url} alt=""/>
+              <img src={message.message.url} alt=""/>
           </div>
         )}
       </div>

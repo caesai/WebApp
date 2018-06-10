@@ -11,6 +11,7 @@ module.exports = {
     path: path.resolve(__dirname,'../'),
     publicPath: 'http://194.58.122.82:80/',
     filename: 'server.js',
+    library: 'server',
     libraryTarget: 'commonjs2'
   },
   node: {
