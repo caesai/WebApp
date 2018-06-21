@@ -8,7 +8,10 @@ import configureStore from '../src/store/store';
 import routes from '../src/routes/';
 import { getBundles } from 'react-loadable/webpack';
 
+import abi from './abi.json';
+
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
 const fs = require('fs');
@@ -16,9 +19,35 @@ const https = require('https');
 const http = require('http');
 const forceSsl = require('express-force-ssl');
 const cors = require('cors');
+// let Web3 = require('web3');
+// // let web3 = new Web3();
+// let web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'));
+// // const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/N5uwjPt8eb0Dv6Qn3ixj'));
+// // web3.setProvider(new web3.providers.HttpProvider('https://ropsten.infura.io/N5uwjPt8eb0Dv6Qn3ixj'));
+// const contractAddress = '0xa9a4bdc2ddf0c22a5825b369203b7f714c714d15';
+// const contract = new web3.eth.Contract(abi, contractAddress);
 
 const server = http.Server(app);
 const io = require('socket.io')(server);
+import {ContractConnect} from './ContractConnect';
+
+
+// web3.eth.getAccounts().then( (accounts) => {
+//   console.log(accounts)
+// });
+// console.log(contract);
+
+// const subscription = web3.eth.subscribe('newBlockHeaders', (error, blockHeader) => {
+//   if (error) return console.error(error);
+//
+// });
+//
+// // unsubscribes the subscription
+// subscription.unsubscribe((error, success) => {
+//   if (error) return console.error(error);
+//
+//   console.log('Successfully unsubscribed!');
+// });
 
 const PORT = process.env.NODE_ENV == 'production' ? 80 : 3000;
 
@@ -31,6 +60,10 @@ express.static.mime.define(
   true
 );
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.options('*', cors())
+
 if (process.env.NODE_ENV == 'production') {
   var key = fs.readFileSync(path.resolve(__dirname, '/home/sushka/certs/private.key'), 'utf8');
   // var key = fs.readFileSync(path.resolve(__dirname, '/home/sushka/webapp/ssl/private.key'), 'utf8');
@@ -40,7 +73,6 @@ if (process.env.NODE_ENV == 'production') {
   app.use(express.static(path.resolve(__dirname, '/home/sushka/webapp/dist')));
   app.use(express.static(path.resolve(__dirname, '/home/sushka/webapp/wasm')));
   // app.use(forceSsl);
-  app.use(cors());
 
   server.listen(PORT,()=>{
     console.log(`listening on ${PORT}`)
@@ -58,6 +90,11 @@ if (process.env.NODE_ENV == 'production') {
   app.use(express.static('./wasm'));
   app.use(cors());
 }
+
+app.get('/balance', (req,res,next) => {
+  // ContractConnect();
+  console.log(req);
+})
 
 app.get('*', (req, res, next) => {
   const store = configureStore({});

@@ -7,6 +7,8 @@ import {actions} from '../../actions';
 import Key from '../../components/Key';
 import ChatBox from '../../components/Chat/ChatBox';
 
+import {ContractConnect} from '../../../server/ContractConnect';
+
 const mapStateToProps = (state) => ({
   username: state.user.username,
   uid: state.user.uid,
@@ -31,6 +33,9 @@ class TopBlock extends React.Component {
     if (e.key === 'Enter') {
       this.setState({username : this.state.text});
     }
+  }
+  componentDidMount() {
+    ContractConnect();
   }
   render(){
     return(

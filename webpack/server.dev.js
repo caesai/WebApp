@@ -5,7 +5,7 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   name: 'server',
   devtool: 'eval',
-  entry: path.resolve(__dirname,'../server/index.js'),
+  entry: ['babel-polyfill', path.resolve(__dirname,'../server/index.js')],
   target: 'node',
   output: {
     path: path.resolve(__dirname,'../'),
