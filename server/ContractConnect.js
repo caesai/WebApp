@@ -18,9 +18,9 @@ const promisify = (inner) =>
     })
 );
 
-export const ContractConnect = async (address) => {
+export const ContractConnect = (address) => {
   web3.eth.getBlockNumber().then(console.log);
   const contract = new web3.eth.Contract(abi, contractAddress);
-  let balance = await contract.methods.balanceOf(address).call();
-  console.log(balance)
+  let balance =  contract.methods.balanceOf(address).call();
+  return balance;
 }

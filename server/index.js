@@ -19,35 +19,10 @@ const https = require('https');
 const http = require('http');
 const forceSsl = require('express-force-ssl');
 const cors = require('cors');
-// let Web3 = require('web3');
-// // let web3 = new Web3();
-// let web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'));
-// // const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/N5uwjPt8eb0Dv6Qn3ixj'));
-// // web3.setProvider(new web3.providers.HttpProvider('https://ropsten.infura.io/N5uwjPt8eb0Dv6Qn3ixj'));
-// const contractAddress = '0xa9a4bdc2ddf0c22a5825b369203b7f714c714d15';
-// const contract = new web3.eth.Contract(abi, contractAddress);
 
 const server = http.Server(app);
 const io = require('socket.io')(server);
 import {ContractConnect} from './ContractConnect';
-
-
-// web3.eth.getAccounts().then( (accounts) => {
-//   console.log(accounts)
-// });
-// console.log(contract);
-
-// const subscription = web3.eth.subscribe('newBlockHeaders', (error, blockHeader) => {
-//   if (error) return console.error(error);
-//
-// });
-//
-// // unsubscribes the subscription
-// subscription.unsubscribe((error, success) => {
-//   if (error) return console.error(error);
-//
-//   console.log('Successfully unsubscribed!');
-// });
 
 const PORT = process.env.NODE_ENV == 'production' ? 80 : 3000;
 
@@ -91,9 +66,15 @@ if (process.env.NODE_ENV == 'production') {
   app.use(cors());
 }
 
-app.get('/balance', (req,res,next) => {
-  // ContractConnect();
-  console.log(req);
+app.post('/balance', async (req,res,next) => {
+  console.log('address' + req.body.address);
+  let balance = await ContractConnect(req.body.address);
+  res.send({balance: balance});
+});
+
+app.post('/bot',(req, res, next) => {
+  console.log(req.body)
+  res.send({message: 'Welcome to NuLand!'})
 })
 
 app.get('*', (req, res, next) => {
